@@ -1,0 +1,2862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths by Faizan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0c1a33;
+    --blue: #2563eb;
+    --orange: #f97316;
+    --red: #ef4444;
+    --green: #059669;
+    --text: #1e293b;
+    --muted: #475569;
+    --bg: #f8fafc;
+  }
+  [hidden] { display: none !important; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--orange);
+    border-radius: 4px;
+    margin: 12px auto 0;
+  }
+  h3 { font-size: 1.2rem; color: #0f172a; margin: 0 0 8px; }
+  section { max-width: 960px; margin: 0 auto; padding: 60px 20px; }
+
+  /* Top clock bar */
+  .clock-bar {
+    background: #0b1d3a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    padding: 16px 20px;
+    flex-wrap: wrap;
+  }
+  .clock-info { text-align: center; }
+  .date { font-size: 0.98rem; color: #cbd5e1; }
+  .digital {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .tz { font-size: 0.75rem; color: #94a3b8; }
+  .face {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #e2b04e;
+    flex-shrink: 0;
+  }
+  .tick-wrap { position: absolute; inset: 0; }
+  .tick-mark {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    width: 2px;
+    height: 7px;
+    margin-left: -1px;
+    background: #64748b;
+  }
+  .hand {
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform-origin: 50% 100%;
+    border-radius: 4px;
+  }
+  .hour { width: 4px; height: 30px; margin-left: -2px; background: #0f172a; }
+  .minute { width: 3px; height: 42px; margin-left: -1.5px; background: #0f172a; }
+  .second { width: 1.5px; height: 48px; margin-left: -0.75px; background: #ef4444; }
+  .pin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+
+  /* Header */
+  header {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #0ea5e9 100%);
+    color: #fff;
+    text-align: center;
+    padding: 60px 20px 80px;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.25;
+    max-width: 760px;
+    margin: 0 auto 14px;
+  }
+  header p {
+    color: #e0ecff;
+    max-width: 640px;
+    margin: 0 auto 30px;
+    font-size: 1.05rem;
+  }
+  .deco {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.14);
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    pointer-events: none;
+    user-select: none;
+  }
+  .d1 { top: 8%; left: 6%; font-size: 4rem; }
+  .d2 { top: 18%; right: 8%; font-size: 5rem; }
+  .d3 { bottom: 12%; left: 12%; font-size: 3.5rem; }
+  .d4 { bottom: 10%; right: 14%; font-size: 4.5rem; }
+  .d5 { top: 55%; left: 46%; font-size: 2.5rem; }
+
+  /* Logo (recreated to match the channel logo) */
+  .logo-wrap {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 30px;
+    z-index: 1;
+  }
+  .logo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%, #1d3461, #0c1a33);
+    border: 7px solid #e2b04e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+  .logo-text { text-align: center; }
+  .logo-text strong {
+    display: block;
+    color: #fff;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    line-height: 1.1;
+  }
+  .logo-text small {
+    display: block;
+    color: #e2b04e;
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    margin: 2px 0;
+  }
+  .sym {
+    position: absolute;
+    font-family: Georgia, "Times New Roman", serif;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 1.4rem;
+  }
+  .s1 { top: 16%; left: 14%; }
+  .s2 { top: 12%; right: 16%; }
+  .s3 { bottom: 16%; left: 20%; }
+  .s4 { bottom: 14%; right: 18%; }
+  .s5 { top: 46%; left: 4%; }
+  .shape { position: absolute; }
+  .sq-gold { width: 22px; height: 22px; background: #e2b04e; transform: rotate(20deg); top: -4px; left: -16px; }
+  .c-blue { width: 22px; height: 22px; border-radius: 50%; background: #3d8bfd; top: 34px; right: -18px; }
+  .sq-red { width: 20px; height: 20px; background: #e0443a; transform: rotate(-15deg); bottom: -4px; right: 14px; }
+  .c-green { width: 20px; height: 20px; border-radius: 50%; background: #2fb36b; bottom: 24px; left: -14px; }
+
+  /* Social links in the header */
+  .header-links { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+  .social {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .social:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); }
+  .social svg { width: 22px; height: 22px; fill: #fff; flex-shrink: 0; }
+  .social.yt { background: #ff0000; }
+  .social.ig { background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af); }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 13px 28px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 6px;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    cursor: pointer;
+    border: 2px solid transparent;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); }
+  .btn-primary { background: var(--orange); color: #fff; }
+  .btn-yt { background: var(--red); color: #fff; }
+
+  /* Daily corner */
+  .daily-sub { text-align: center; color: var(--muted); max-width: 640px; margin: -16px auto 10px; }
+  .daily-date { text-align: center; color: var(--blue); font-weight: 600; margin-bottom: 24px; }
+  .daily-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .daily-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 26px 24px;
+    border-top: 6px solid var(--c, var(--blue));
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  }
+  .daily-card h3 { margin-bottom: 6px; }
+  .daily-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+  }
+  .daily-toggle .daily-tag { margin-bottom: 0; }
+  .daily-hint { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+  .daily-body { margin-top: 14px; }
+  .daily-card p { color: var(--muted); font-size: 0.95rem; }
+  .daily-card .tip-text { color: var(--text); font-size: 1.02rem; }
+  .daily-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--c, var(--blue));
+    margin-bottom: 8px;
+  }
+  .formula {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    background: #f1f5f9;
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin: 10px 0;
+    line-height: 1.5;
+  }
+  .daily-card .formula { color: #0f172a; }
+  .class-pill {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  /* Quote band */
+  .quote-band {
+    max-width: none;
+    background: #fff8e7;
+    text-align: center;
+    padding: 30px 20px;
+    border-bottom: 1px solid #f5e6b8;
+  }
+  .quote-text {
+    font-size: 1.15rem;
+    font-style: italic;
+    color: #78350f;
+    max-width: 760px;
+    margin: 0 auto 6px;
+  }
+  .quote-author { color: #92400e; font-weight: 600; font-size: 0.92rem; }
+
+  /* Greeting from the teacher */
+  .greet-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 32px 30px;
+    border-left: 6px solid var(--orange);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  }
+  .greet-label {
+    color: var(--orange);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .greet-title { font-size: 1.6rem; margin: 6px 0 10px; }
+  .greet-card p { color: var(--muted); font-size: 1rem; }
+  .my-quote {
+    margin-top: 20px;
+    background: #eff6ff;
+    border-radius: 14px;
+    padding: 18px 20px;
+    font-style: italic;
+    color: #1e3a8a;
+  }
+  .my-quote span { display: block; font-style: normal; font-weight: 700; margin-top: 6px; }
+  .greet-sign { font-weight: 700; color: #0f172a; margin-top: 14px; }
+
+  /* Formula sheet: class and topic choice */
+  .step-sub { text-align: center; color: var(--muted); margin: -16px auto 26px; max-width: 640px; }
+  .class-row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .class-btn {
+    background: #fff;
+    border: 2px solid var(--c, var(--blue));
+    color: var(--c, var(--blue));
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+  }
+  .class-btn:hover { transform: translateY(-2px); }
+  .class-btn.active { background: var(--c, var(--blue)); color: #fff; }
+  .topic-panel {
+    margin: 30px auto 0;
+    max-width: 860px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    border-top: 6px solid var(--c, var(--blue));
+  }
+  .topic-panel h3 { text-align: center; margin-bottom: 18px; }
+  .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .topic-btn {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-weight: 600;
+    color: #0f172a;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .topic-btn:hover { border-color: var(--c, var(--blue)); transform: translateY(-2px); }
+  .topic-btn .count { display: block; font-weight: 400; font-size: 0.8rem; color: var(--muted); }
+  .topic-btn.all { background: var(--c, var(--blue)); border-color: var(--c, var(--blue)); color: #fff; }
+  .topic-btn.all .count { color: #e0ecff; }
+
+  /* Tips card */
+  .action-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 30px 24px;
+    text-align: center;
+    border-top: 6px solid var(--orange);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .action-card p { color: var(--muted); font-size: 0.95rem; margin: 8px 0 18px; }
+  .open-btn {
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    padding: 12px 26px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.98rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .open-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); }
+
+  /* Motivation articles */
+  .article {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .article summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 18px 20px;
+    font-weight: 600;
+    color: #0f172a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .article summary::-webkit-details-marker { display: none; }
+  .article summary::after { content: "+"; font-size: 1.3rem; color: var(--green); }
+  .article[open] summary::after { content: "\2212"; }
+  .read-time { font-size: 0.8rem; color: var(--muted); font-weight: 400; white-space: nowrap; margin-left: auto; margin-right: 12px; }
+  .article p { padding: 0 20px 18px; color: var(--muted); }
+
+  /* Teacher bio */
+  .about { max-width: none; background: #fff; }
+  .bio-card {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    padding: 32px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .photo-wrap {
+    position: relative;
+    width: 170px;
+    height: 170px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid #e2b04e;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+  }
+  .photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-fallback {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: #fff;
+    font-size: 2.2rem;
+    font-weight: 700;
+  }
+  .bio-label {
+    color: var(--orange);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+  }
+  .bio-name { font-size: 1.6rem; margin: 4px 0; }
+  .bio-degree { font-weight: 600; color: var(--blue); }
+  .bio-uni { color: var(--muted); font-size: 0.95rem; }
+  .batch {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 8px 0;
+  }
+  .bio-para { color: var(--muted); font-size: 0.98rem; }
+
+  /* White panels */
+  .latest { text-align: center; }
+  .panel {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    padding: 44px 28px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .panel h2 { margin-bottom: 24px; }
+  .panel p { color: var(--muted); margin-bottom: 18px; }
+
+  footer {
+    background: var(--navy);
+    color: #cbd5e1;
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 640px) {
+    header h1 { font-size: 1.8rem; }
+    .digital { font-size: 1.6rem; }
+    .bio-card { flex-direction: column; text-align: center; padding: 24px; }
+    .greet-card { padding: 24px 20px; }
+    .topic-panel { padding: 20px 16px; }
+  }
+/* ===== Daily Learning Hub ===== */
+.hub { max-width: 1040px; }
+.hub-sub { text-align: center; color: var(--muted); max-width: 640px; margin: -16px auto 26px; }
+
+.hub-bar {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  justify-content: space-between; align-items: center;
+  background: #fff; border-radius: 18px; padding: 16px 20px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); margin-bottom: 18px;
+}
+.hub-date { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--blue); }
+.hub-date svg { width: 22px; height: 22px; stroke: var(--blue); fill: none; stroke-width: 2; }
+.hub-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+.stat { display: flex; align-items: center; gap: 8px; background: #f1f5f9; border-radius: 12px; padding: 8px 14px; }
+.stat b { font-size: 1.15rem; color: #0f172a; font-variant-numeric: tabular-nums; }
+.stat small { color: var(--muted); font-size: 0.8rem; }
+.stat svg { width: 20px; height: 20px; stroke: var(--orange); fill: none; stroke-width: 2; }
+.stat.streak svg { stroke: #ef4444; }
+.stat.streak.on svg { animation: flicker 1.6s ease-in-out infinite; }
+.stat.pop { animation: pop 0.5s ease; }
+
+.class-filter { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin-bottom: 22px; }
+.class-filter > span { color: var(--muted); font-weight: 600; margin-right: 4px; }
+.cf-btn {
+  border: 2px solid #cbd5e1; background: #fff; border-radius: 999px;
+  padding: 6px 14px; font: inherit; font-weight: 600; color: #334155; cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.cf-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+.hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 20px; }
+.hub-card {
+  background: #fff; border-radius: 18px; padding: 22px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  border-top: 6px solid var(--c, var(--blue));
+  display: flex; flex-direction: column;
+  animation: fadeUp 0.5s ease both;
+}
+.hub-head { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+.hub-icon {
+  width: 44px; height: 44px; border-radius: 12px; background: var(--c, var(--blue));
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.hub-icon svg { width: 24px; height: 24px; stroke: #fff; fill: none; stroke-width: 2; }
+.hub-kicker { display: block; font-weight: 700; color: #0f172a; line-height: 1.3; }
+.hub-topic { display: block; font-size: 0.78rem; color: var(--muted); }
+.hub-q { color: #0f172a; font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
+
+.opts { display: block; }
+.opt {
+  display: block; width: 100%; text-align: left;
+  padding: 12px 14px; margin-bottom: 10px;
+  border: 2px solid #e2e8f0; border-radius: 12px; background: #f8fafc;
+  font: inherit; color: var(--text); cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.opt:hover:not(:disabled) { border-color: var(--c, var(--blue)); transform: translateX(3px); }
+.opt[aria-pressed="true"] { border-color: var(--c, var(--blue)); background: #eff6ff; font-weight: 600; }
+.opt.correct { border-color: #10b981; background: #ecfdf5; font-weight: 600; }
+.opt.wrong { border-color: #ef4444; background: #fef2f2; }
+.opt:disabled { cursor: default; }
+
+.btn-main {
+  background: var(--c, var(--blue)); color: #fff; border: none; border-radius: 999px;
+  padding: 11px 22px; font: inherit; font-weight: 600; cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.btn-main:hover:not(:disabled) { transform: translateY(-2px); }
+.btn-main:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-ghost {
+  background: none; border: 2px solid #cbd5e1; border-radius: 999px;
+  padding: 7px 16px; font: inherit; color: var(--muted); cursor: pointer; align-self: flex-start;
+}
+.hub-actions { margin-top: auto; }
+.answer-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.answer-row input {
+  flex: 1; min-width: 0; padding: 11px 14px;
+  border: 2px solid #cbd5e1; border-radius: 12px; font: inherit;
+}
+.answer-row input:focus { outline: none; border-color: var(--c, var(--blue)); }
+.answer-row input:disabled { background: #f1f5f9; }
+.hub-hint { background: #fffbeb; color: #92400e; border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; }
+
+.feedback { margin-top: 14px; border-radius: 12px; padding: 14px; font-size: 0.95rem; line-height: 1.6; animation: fadeUp 0.4s ease both; }
+.feedback strong { display: block; margin-bottom: 4px; }
+.feedback.ok { background: #ecfdf5; color: #065f46; }
+.feedback.bad { background: #fef2f2; color: #991b1b; }
+.feedback.info { background: #eff6ff; color: #1e3a8a; }
+
+.tasks { list-style: none; padding: 0; margin: 0; }
+.task {
+  display: flex; gap: 12px; align-items: center; width: 100%; text-align: left;
+  background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 10px; font: inherit; color: var(--text); cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.task[aria-pressed="true"] { background: #ecfdf5; border-color: #10b981; }
+.task .box {
+  width: 26px; height: 26px; border-radius: 8px; border: 2px solid #94a3b8;
+  display: grid; place-items: center; flex-shrink: 0; background: #fff;
+}
+.task[aria-pressed="true"] .box { background: #10b981; border-color: #10b981; }
+.task .box svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 3; opacity: 0; transition: opacity 0.2s; }
+.task[aria-pressed="true"] .box svg { opacity: 1; }
+.mission-note { margin-top: auto; color: var(--muted); font-size: 0.92rem; padding-top: 6px; }
+
+.fact-card { margin-top: 20px; }
+.fact-card .hub-head { justify-content: space-between; }
+.fact-card .hub-head > div { flex: 1; }
+.bm-btn {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  background: #f5f3ff; border: 2px solid #ddd6fe; color: #6d28d9;
+  border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.bm-btn svg { width: 18px; height: 18px; stroke: #6d28d9; fill: none; stroke-width: 2; }
+.bm-btn[aria-pressed="true"] { background: #6d28d9; color: #fff; }
+.bm-btn[aria-pressed="true"] svg { stroke: #fff; fill: #fff; }
+
+.saved { margin-top: 18px; background: #fff; border-radius: 14px; padding: 14px 18px; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07); }
+.saved summary { cursor: pointer; font-weight: 600; color: #0f172a; }
+.saved ul { list-style: none; padding: 0; margin: 12px 0 0; }
+.saved li { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: var(--muted); font-size: 0.93rem; }
+.saved li:last-child { border-bottom: none; }
+.hub-foot { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 18px; }
+
+/* Admin panel */
+.admin { --c: var(--blue); max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+body.admin-mode > *:not(#adminView) { display: none !important; }
+.admin-card { background: #fff; border-radius: 18px; padding: 26px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); }
+.admin h2 { text-align: left; margin-bottom: 8px; }
+.admin h2::after { display: none; }
+.admin label { display: block; font-weight: 600; font-size: 0.9rem; margin: 10px 0 4px; color: #0f172a; }
+.admin input, .admin select, .admin textarea {
+  width: 100%; padding: 9px 12px; border: 2px solid #cbd5e1; border-radius: 10px; font: inherit; background: #fff;
+}
+.admin textarea { min-height: 70px; resize: vertical; }
+.admin-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+.admin-tabs button {
+  border: 2px solid #cbd5e1; background: #fff; border-radius: 999px; padding: 7px 14px;
+  font: inherit; font-weight: 600; color: #334155; cursor: pointer;
+}
+.admin-tabs button.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+.admin-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.admin-top a { color: var(--blue); font-weight: 600; }
+.admin-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+.row-item { display: flex; gap: 12px; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #e2e8f0; }
+.row-item p { margin: 0; color: var(--text); font-size: 0.93rem; line-height: 1.5; }
+.row-item small { color: var(--muted); }
+.row-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.small-btn { border: none; border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 0.85rem; cursor: pointer; background: #e2e8f0; color: #0f172a; }
+.small-btn.danger { background: #fee2e2; color: #991b1b; }
+.small-btn.primary { background: #dbeafe; color: #1e3a8a; }
+.admin-err { color: #b91c1c; margin-top: 10px; }
+.admin-note { color: var(--muted); font-size: 0.85rem; margin-top: 12px; }
+.admin-form { background: #f8fafc; border-radius: 14px; padding: 18px; margin: 14px 0; }
+.admin-form .admin-actions { margin-bottom: 0; }
+
+/* Motion */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.08); } 100% { transform: scale(1); } }
+@keyframes flicker { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+@media (prefers-reduced-motion: reduce) {
+  .hub-card, .feedback, .stat.streak.on svg, .stat.pop { animation: none !important; }
+}
+
+@media (max-width: 640px) {
+  .hub-bar { padding: 14px; }
+  .hub-stats { width: 100%; justify-content: space-between; }
+  .stat { flex: 1; justify-content: center; padding: 8px 10px; }
+  .answer-row { flex-direction: column; }
+  .answer-row .btn-main { width: 100%; }
+  .admin { padding: 24px 16px; }
+  .admin-card { padding: 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="clock-bar">
+  <div class="clock-info">
+    <div class="date" id="dateText"></div>
+    <div class="digital" id="digitalTime">--:--:--</div>
+    <div class="tz">Indian Standard Time (IST)</div>
+  </div>
+  <div class="face" id="analogFace" aria-label="Analog clock">
+    <div class="hand hour" id="hHand"></div>
+    <div class="hand minute" id="mHand"></div>
+    <div class="hand second" id="sHand"></div>
+    <div class="pin"></div>
+  </div>
+</div>
+
+<header>
+  <span class="deco d1">π</span>
+  <span class="deco d2">Σ</span>
+  <span class="deco d3">√</span>
+  <span class="deco d4">∞</span>
+  <span class="deco d5">÷</span>
+
+  <div class="logo-wrap">
+    <div class="logo">
+      <span class="sym s1">π</span>
+      <span class="sym s2">Σ</span>
+      <span class="sym s3">∞</span>
+      <span class="sym s4">√</span>
+      <span class="sym s5">÷</span>
+      <div class="logo-text">
+        <strong>MATHS</strong>
+        <small>BY</small>
+        <strong>FAIZAN</strong>
+      </div>
+    </div>
+    <span class="shape sq-gold"></span>
+    <span class="shape c-blue"></span>
+    <span class="shape sq-red"></span>
+    <span class="shape c-green"></span>
+  </div>
+  <h1>Learn Maths with Confidence</h1>
+  <p>Clear, step-by-step maths lessons for Classes 8 to 12. Understand difficult topics, practise important concepts, and prepare for your exams at your own pace.</p>
+
+  <div class="header-links">
+    <a class="social yt" href="https://www.youtube.com/@mathsbyfaizann/videos" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+      Watch on YouTube
+    </a>
+    <a class="social ig" href="https://www.instagram.com/maths_by_faizan" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg>
+      Follow us on Instagram
+    </a>
+  </div>
+</header>
+
+<section class="quote-band">
+  <p class="quote-text" id="quoteText"></p>
+  <p class="quote-author" id="quoteAuthor"></p>
+</section>
+
+<section id="daily" class="hub">
+  <h2>Daily Learning Hub</h2>
+  <p class="hub-sub">New questions, challenges and missions every day. Answer, learn and keep your streak going.</p>
+
+  <div class="hub-bar">
+    <div class="hub-date">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      <span id="hubDate"></span>
+    </div>
+    <div class="hub-stats">
+      <div class="stat" id="statPoints">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 22l-6-4-6 4 1.5-8.5L2 9h7z"/></svg>
+        <b id="hubPoints">0</b><small>points</small>
+      </div>
+      <div class="stat streak" id="statStreak">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 3 4 5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-8z"/></svg>
+        <b id="hubStreak">0</b><small>day streak</small>
+      </div>
+      <div class="stat" id="statToday">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+        <b id="hubToday">0/3</b><small>done today</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="class-filter" role="group" aria-label="Choose your class">
+    <span>Your class</span>
+    <button class="cf-btn" data-c="all" type="button">All</button>
+    <button class="cf-btn" data-c="8" type="button">Class 8</button>
+    <button class="cf-btn" data-c="9" type="button">Class 9</button>
+    <button class="cf-btn" data-c="10" type="button">Class 10</button>
+    <button class="cf-btn" data-c="11" type="button">Class 11</button>
+    <button class="cf-btn" data-c="12" type="button">Class 12</button>
+  </div>
+
+  <div class="hub-grid">
+    <article class="hub-card" style="--c: #2563eb;">
+      <div class="hub-head">
+        <span class="hub-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+        <div><span class="hub-kicker">Question of the Day</span><span class="hub-topic" id="qTopic"></span></div>
+      </div>
+      <p class="hub-q" id="qText"></p>
+      <div class="opts" id="qOpts"></div>
+      <div class="hub-actions"><button class="btn-main" id="qSubmit" type="button" disabled>Submit answer</button></div>
+      <div class="feedback" id="qFeedback" hidden></div>
+    </article>
+
+    <article class="hub-card" style="--c: #f97316;">
+      <div class="hub-head">
+        <span class="hub-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+        <div><span class="hub-kicker">Maths Challenge of the Day</span><span class="hub-topic" id="cTopic"></span></div>
+      </div>
+      <p class="hub-q" id="cText"></p>
+      <div class="answer-row">
+        <input id="cInput" type="text" inputmode="decimal" placeholder="e.g. 12 or 3/4" autocomplete="off" aria-label="Your answer">
+        <button class="btn-main" id="cSubmit" type="button">Check</button>
+      </div>
+      <div class="hub-actions"><button class="btn-ghost" id="cHintBtn" type="button">Show hint</button></div>
+      <p class="hub-hint" id="cHint" hidden></p>
+      <div class="feedback" id="cFeedback" hidden></div>
+    </article>
+
+    <article class="hub-card" style="--c: #10b981;">
+      <div class="hub-head">
+        <span class="hub-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
+        <div><span class="hub-kicker">Daily Study Mission</span><span class="hub-topic" id="mTitle"></span></div>
+      </div>
+      <ul class="tasks" id="mTasks"></ul>
+      <p class="mission-note" id="mNote"></p>
+    </article>
+  </div>
+
+  <article class="hub-card fact-card" style="--c: #8b5cf6;">
+    <div class="hub-head">
+      <span class="hub-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></span>
+      <div><span class="hub-kicker">Interesting Maths Fact</span></div>
+      <button class="bm-btn" id="bmBtn" type="button" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+        <span id="bmLabel">Save</span>
+      </button>
+    </div>
+    <p class="hub-q" id="factText"></p>
+  </article>
+
+  <details class="saved" id="savedBox">
+    <summary>Saved facts (<span id="savedCount">0</span>)</summary>
+    <ul id="savedList"></ul>
+  </details>
+  <p class="hub-foot">Your points, streak and saved facts are kept on this device.</p>
+</section>
+
+<section id="adminView" class="admin" hidden>
+  <div class="admin-card" id="adminLogin">
+    <h2>Daily content admin</h2>
+    <p>Enter the admin passcode to continue.</p>
+    <label for="adminPass">Passcode</label>
+    <input id="adminPass" type="password" autocomplete="current-password">
+    <div class="admin-actions"><button class="btn-main" id="adminEnter" type="button">Open</button></div>
+    <p class="admin-err" id="adminErr" hidden>That passcode is not correct.</p>
+    <p class="admin-note">This lock keeps casual visitors out. It is not real security, because anyone who can read the page source can see the passcode.</p>
+  </div>
+  <div id="adminPanel" hidden>
+    <div class="admin-card">
+      <div class="admin-top">
+        <h2>Daily content admin</h2>
+        <a href="#" id="adminExit">Back to the website</a>
+      </div>
+      <nav class="admin-tabs" id="adminTabs">
+        <button type="button" data-tab="questions" class="on">Questions</button>
+        <button type="button" data-tab="challenges">Challenges</button>
+        <button type="button" data-tab="missions">Missions</button>
+        <button type="button" data-tab="facts">Facts</button>
+        <button type="button" data-tab="schedule">Schedule</button>
+        <button type="button" data-tab="publish">Publish</button>
+      </nav>
+      <div id="adminBody"></div>
+    </div>
+  </div>
+</section>
+
+
+<section id="greeting">
+  <div class="greet-card">
+    <p class="greet-label">A message from Faizan</p>
+    <h3 class="greet-title">Welcome, students!</h3>
+    <p>I am Faizan, and I teach Mathematics for Classes 8 to 12. My aim is simple: to make every topic clear, one step at a time. If something feels difficult today, do not worry. Maths rewards patience, and every problem you solve makes the next one easier. Take your time, ask questions, and keep practising.</p>
+    <div class="my-quote">
+      "Every expert was once a beginner. Keep practising, and the difficult will soon feel easy."
+      <span>Faizan</span>
+    </div>
+    <p class="greet-sign">Faizan</p>
+  </div>
+</section>
+
+<section id="formulas">
+  <h2>Formula Sheet</h2>
+  <p class="step-sub">Step 1: choose your class. Step 2: choose the topic. The formulas open in a new tab.</p>
+  <div class="class-row" id="classRow">
+    <button class="class-btn" data-cls="8">Class 8</button>
+    <button class="class-btn" data-cls="9">Class 9</button>
+    <button class="class-btn" data-cls="10">Class 10</button>
+    <button class="class-btn" data-cls="11">Class 11</button>
+    <button class="class-btn" data-cls="12">Class 12</button>
+  </div>
+  <div class="topic-panel" id="topicPanel" hidden>
+    <h3 id="topicHeading"></h3>
+    <div class="topic-grid" id="topicGrid"></div>
+  </div>
+</section>
+
+<section id="motivation">
+  <h2>Motivation</h2>
+  <div id="articlesList"></div>
+</section>
+
+<section class="about">
+  <h2>Making Maths Easier</h2>
+  <div class="bio-card">
+    <div class="photo-wrap">
+      <img src="data:image/jpeg;base64,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" alt="Faizan Muzaffar Dar" id="teacherPhoto">
+      <div class="photo-fallback" id="photoFallback">FMD</div>
+    </div>
+    <div>
+      <p class="bio-label">About the Teacher</p>
+      <h3 class="bio-name">Faizan Muzaffar Dar</h3>
+      <p class="bio-degree">B.Sc in Mathematical Sciences</p>
+      <p class="bio-uni">Islamic University of Science and Technology</p>
+      <span class="batch">Batch 2023</span>
+      <p class="bio-para">Hi, I'm Faizan. I create easy-to-follow lessons to help students understand Maths, one topic at a time. Whether you're learning a concept for the first time or revising for an exam, you'll find lessons designed to make learning clearer and more enjoyable.</p>
+    </div>
+  </div>
+</section>
+
+<section class="latest">
+  <div class="panel">
+    <h2>Latest Videos</h2>
+    <p>New lessons are posted on my YouTube channel regularly. Subscribe so you don't miss any.</p>
+    <a class="btn btn-yt" href="https://www.youtube.com/@mathsbyfaizann/videos" target="_blank" rel="noopener">Go to My Channel</a>
+  </div>
+</section>
+
+<section class="latest" id="contact">
+  <div class="panel">
+    <h2>Contact Us</h2>
+    <p>Have a question about a lesson or want to know more about classes? Send me an email.</p>
+    <a class="btn btn-primary" href="mailto:nameisfaizann080@gmail.com">Email Us</a>
+    <p style="margin-top: 14px;">nameisfaizann080@gmail.com</p>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 Maths by Faizan. All rights reserved.
+</footer>
+
+<script>
+  const SYL_8 = [
+  { topic: "Rational Numbers", items: [
+    ["Rational number", "p/q, where q ≠ 0", "p and q are integers"],
+    ["Additive inverse", "−(a/b) is the additive inverse of a/b", "a/b + (−a/b) = 0"],
+    ["Multiplicative inverse", "b/a is the multiplicative inverse of a/b", "a ≠ 0; the product of the two is 1"],
+    ["Distributive law", "a × (b + c) = a × b + a × c", "holds for rational numbers"]
+  ]},
+  { topic: "Linear Equations in One Variable", items: [
+    ["Standard form", "ax + b = c", "a ≠ 0"],
+    ["Solution", "x = (c − b)/a", "divide both sides by a"],
+    ["Transposing", "A term crosses the = sign and changes its sign", "rule for moving terms"]
+  ]},
+  { topic: "Understanding Quadrilaterals", items: [
+    ["Angle sum of a quadrilateral", "A + B + C + D = 360°", ""],
+    ["Angle sum of a polygon", "(n − 2) × 180°", "n = number of sides"],
+    ["Sum of exterior angles of any polygon", "360°", ""],
+    ["Each exterior angle of a regular polygon", "360° / n", "n = number of sides"]
+  ]},
+  { topic: "Practical Geometry", items: [
+    ["Triangle construction (SSS)", "Three sides are given", "rule"],
+    ["Triangle construction (SAS)", "Two sides and the included angle are given", "rule"],
+    ["Triangle construction (ASA)", "Two angles and the included side are given", "rule"],
+    ["Triangle construction (RHS)", "Hypotenuse, one side and a right angle are given", "right-angled triangles only"]
+  ]},
+  { topic: "Data Handling", items: [
+    ["Mean", "Sum of observations / Number of observations", ""],
+    ["Median", "Middle value after arranging the data in order", "n odd: the ((n + 1)/2)th value; n even: average of the (n/2)th and (n/2 + 1)th values"],
+    ["Mode", "Value that occurs most often", ""],
+    ["Range", "Maximum value − Minimum value", ""],
+    ["Probability", "Favourable outcomes / Total outcomes", "value is between 0 and 1"]
+  ]},
+  { topic: "Squares and Square Roots", items: [
+    ["Sum of first n odd numbers", "1 + 3 + 5 + … + (2n − 1) = n²", ""],
+    ["Square root of a product", "√(a × b) = √a × √b", ""],
+    ["Square root of a quotient", "√(a/b) = √a / √b", "b ≠ 0"],
+    ["Pythagorean triplet", "(2m)² + (m² − 1)² = (m² + 1)²", "m > 1; gives a right-angled triangle"]
+  ]},
+  { topic: "Cubes and Cube Roots", items: [
+    ["Cube", "n³ = n × n × n", ""],
+    ["Cube root of a product", "∛(a × b) = ∛a × ∛b", ""],
+    ["Cube root of a quotient", "∛(a/b) = ∛a / ∛b", "b ≠ 0"],
+    ["Sum of first n cubes", "1³ + 2³ + … + n³ = [n(n + 1)/2]²", ""]
+  ]},
+  { topic: "Comparing Quantities", items: [
+    ["Percentage", "(Value / Total) × 100", ""],
+    ["Profit", "Profit = SP − CP", "CP = cost price, SP = selling price"],
+    ["Loss", "Loss = CP − SP", ""],
+    ["Profit per cent", "(Profit / CP) × 100", ""],
+    ["Loss per cent", "(Loss / CP) × 100", ""],
+    ["Discount", "Discount = Marked price − Selling price", ""],
+    ["Discount per cent", "(Discount / Marked price) × 100", ""],
+    ["Simple interest", "SI = (P × R × T) / 100", "P = principal, R = rate % per year, T = years"],
+    ["Amount (simple interest)", "A = P + SI", ""],
+    ["Compound amount", "A = P(1 + R/100)ⁿ", "n = number of years, interest compounded yearly"],
+    ["Compound interest", "CI = A − P", ""]
+  ]},
+  { topic: "Algebraic Expressions and Identities", items: [
+    ["Identity 1", "(a + b)² = a² + 2ab + b²", ""],
+    ["Identity 2", "(a − b)² = a² − 2ab + b²", ""],
+    ["Identity 3", "(a + b)(a − b) = a² − b²", ""],
+    ["Identity 4", "(x + a)(x + b) = x² + (a + b)x + ab", ""]
+  ]},
+  { topic: "Visualising Solid Shapes", items: [
+    ["Euler's formula", "F + V − E = 2", "F = faces, V = vertices, E = edges (for polyhedra)"]
+  ]},
+  { topic: "Mensuration", items: [
+    ["Square", "Area = a²; Perimeter = 4a", "a = side"],
+    ["Rectangle", "Area = l × b; Perimeter = 2(l + b)", ""],
+    ["Parallelogram", "Area = base × height", ""],
+    ["Triangle", "Area = ½ × base × height", ""],
+    ["Trapezium", "Area = ½ × (a + b) × h", "a and b are the parallel sides"],
+    ["Circle", "Area = πr²; Circumference = 2πr", "π = 22/7 or 3.14"],
+    ["Cube", "Volume = a³; Total surface area = 6a²", "Lateral surface area = 4a²"],
+    ["Cuboid", "Volume = l × b × h; Total surface area = 2(lb + bh + hl)", "Lateral surface area = 2h(l + b)"],
+    ["Cylinder", "Volume = πr²h; Curved surface area = 2πrh", "Total surface area = 2πr(r + h)"],
+    ["Four walls of a room", "Area = 2h(l + b)", "h = height of the room"]
+  ]},
+  { topic: "Exponents and Powers", items: [
+    ["Product law", "aᵐ × aⁿ = aᵐ⁺ⁿ", ""],
+    ["Quotient law", "aᵐ / aⁿ = aᵐ⁻ⁿ", "a ≠ 0"],
+    ["Power of a power", "(aᵐ)ⁿ = aᵐⁿ", ""],
+    ["Zero exponent", "a⁰ = 1", "a ≠ 0"],
+    ["Negative exponent", "a⁻ᵐ = 1 / aᵐ", "a ≠ 0"],
+    ["Same power, product of bases", "aᵐ × bᵐ = (ab)ᵐ", ""],
+    ["Same power, quotient of bases", "aᵐ / bᵐ = (a/b)ᵐ", "b ≠ 0"],
+    ["Scientific notation", "x × 10ⁿ", "1 ≤ x < 10, n is an integer"]
+  ]},
+  { topic: "Direct and Inverse Proportions", items: [
+    ["Direct proportion", "y = kx, so y / x = k", "k is a constant"],
+    ["Inverse proportion", "xy = k", "k is a constant"],
+    ["Unitary method", "Value of 1 unit = Total value / Number of units", ""]
+  ]},
+  { topic: "Factorisation", items: [
+    ["Common factor", "ab + ac = a(b + c)", ""],
+    ["Difference of squares", "a² − b² = (a + b)(a − b)", ""],
+    ["Perfect square", "a² + 2ab + b² = (a + b)²", ""],
+    ["Factorising a quadratic", "x² + (a + b)x + ab = (x + a)(x + b)", ""]
+  ]},
+  { topic: "Introduction to Graphs", items: [
+    ["Speed", "Speed = Distance / Time", ""],
+    ["Distance", "Distance = Speed × Time", ""],
+    ["Time", "Time = Distance / Speed", ""]
+  ]},
+  { topic: "Playing with Numbers", items: [
+    ["Two-digit number", "10a + b", "a = tens digit, b = units digit"],
+    ["Reversed two-digit number", "10b + a", ""],
+    ["Divisibility by 3", "Sum of digits is divisible by 3", "rule"],
+    ["Divisibility by 9", "Sum of digits is divisible by 9", "rule"],
+    ["Divisibility by 4", "Last two digits form a multiple of 4", "rule"],
+    ["Divisibility by 11", "(Sum of digits at odd places) − (Sum of digits at even places) is 0 or divisible by 11", "rule"]
+  ]}
+];
+
+const SYL_9 = [
+  { topic: "Number Systems", items: [
+    ["Irrational number", "Non-terminating, non-repeating decimal", "e.g. √2, π"],
+    ["Rationalising factor", "1 / (√a + √b) = (√a − √b) / (a − b)", "a ≠ b"],
+    ["Product of surds", "(√a + √b)(√a − √b) = a − b", ""],
+    ["Radical", "ⁿ√a = a^(1/n)", ""],
+    ["Law for surds", "√a × √b = √(ab)", ""]
+  ]},
+  { topic: "Polynomials", items: [
+    ["Square of a trinomial", "(x + y + z)² = x² + y² + z² + 2xy + 2yz + 2zx", ""],
+    ["Cube of a sum", "(x + y)³ = x³ + y³ + 3xy(x + y)", ""],
+    ["Cube of a difference", "(x − y)³ = x³ − y³ − 3xy(x − y)", ""],
+    ["Sum of cubes", "x³ + y³ = (x + y)(x² − xy + y²)", ""],
+    ["Difference of cubes", "x³ − y³ = (x − y)(x² + xy + y²)", ""],
+    ["Sum of three cubes", "x³ + y³ + z³ − 3xyz = (x + y + z)(x² + y² + z² − xy − yz − zx)", ""],
+    ["Remainder theorem", "Remainder when p(x) is divided by (x − a) is p(a)", ""],
+    ["Factor theorem", "(x − a) is a factor of p(x) if and only if p(a) = 0", ""],
+    ["Zero of a linear polynomial", "ax + b = 0 gives x = −b / a", "a ≠ 0"]
+  ]},
+  { topic: "Coordinate Geometry", items: [
+    ["Coordinates", "P(x, y); x = abscissa, y = ordinate", ""],
+    ["Quadrants", "I (+, +), II (−, +), III (−, −), IV (+, −)", "rule"]
+  ]},
+  { topic: "Linear Equations in Two Variables", items: [
+    ["General form", "ax + by + c = 0", "a and b are not both zero"],
+    ["Line parallel to the x-axis", "y = k", ""],
+    ["Line parallel to the y-axis", "x = k", ""],
+    ["Line through the origin", "y = mx", "passes through (0, 0)"]
+  ]},
+  { topic: "Introduction to Euclid's Geometry", items: [
+    ["Axiom 1", "Things which are equal to the same thing are equal to one another", "rule"],
+    ["Axiom 2", "If equals are added to equals, the wholes are equal", "rule"],
+    ["Axiom 3", "If equals are subtracted from equals, the remainders are equal", "rule"],
+    ["Axiom 4", "The whole is greater than the part", "rule"],
+    ["Postulate", "Through two distinct points, exactly one line can be drawn", "rule"]
+  ]},
+  { topic: "Lines and Angles", items: [
+    ["Linear pair", "∠1 + ∠2 = 180°", ""],
+    ["Vertically opposite angles", "∠1 = ∠3", "always equal"],
+    ["Corresponding angles", "Equal when the lines are parallel", "rule"],
+    ["Alternate interior angles", "Equal when the lines are parallel", "rule"],
+    ["Co-interior angles", "Sum to 180° when the lines are parallel", "rule"],
+    ["Angles around a point", "Sum to 360°", ""]
+  ]},
+  { topic: "Triangles", items: [
+    ["Angle sum", "∠A + ∠B + ∠C = 180°", ""],
+    ["Exterior angle", "Exterior angle = sum of the two interior opposite angles", ""],
+    ["Congruence criteria", "SSS, SAS, ASA, RHS", "rule"],
+    ["Triangle inequality", "Sum of any two sides > third side", ""],
+    ["Angle and side", "The larger side is opposite the larger angle", "rule"],
+    ["Isosceles triangle", "Angles opposite equal sides are equal", "rule"]
+  ]},
+  { topic: "Quadrilaterals", items: [
+    ["Angle sum", "A + B + C + D = 360°", ""],
+    ["Mid-point theorem", "DE = ½ BC and DE ∥ BC", "D and E are mid-points of AB and AC"],
+    ["Parallelogram diagonals", "Diagonals bisect each other", "rule"],
+    ["Parallelogram sides and angles", "Opposite sides equal; opposite angles equal", "rule"],
+    ["Rhombus diagonals", "Perpendicular to each other", "rule"],
+    ["Rectangle diagonals", "Equal in length", "rule"]
+  ]},
+  { topic: "Areas of Parallelograms and Triangles", items: [
+    ["Area of a parallelogram", "Base × height", ""],
+    ["Area of a triangle", "½ × base × height", ""],
+    ["Equal area theorem", "Parallelograms on the same base and between the same parallels have equal area", "rule"],
+    ["Median", "A median divides a triangle into two triangles of equal area", "rule"]
+  ]},
+  { topic: "Circles", items: [
+    ["Angle at the centre", "Angle at centre = 2 × angle at circumference", "same arc"],
+    ["Angle in a semicircle", "90°", ""],
+    ["Angles in the same segment", "Equal", "rule"],
+    ["Cyclic quadrilateral", "Opposite angles sum to 180°", ""],
+    ["Tangent and radius", "Tangent is perpendicular to the radius at the point of contact", "rule"],
+    ["Tangents from one external point", "Equal in length", "rule"]
+  ]},
+  { topic: "Constructions", items: [
+    ["60° angle", "Construct an equilateral triangle", "rule"],
+    ["Bisecting an angle", "Draw equal arcs from the vertex, then join the vertex to where they cross", "rule"],
+    ["Perpendicular bisector", "Draw arcs of equal radius from both ends of the segment", "rule"],
+    ["Parallel lines", "Construct equal corresponding angles", "rule"]
+  ]},
+  { topic: "Heron's Formula", items: [
+    ["Semi-perimeter", "s = (a + b + c) / 2", ""],
+    ["Heron's formula", "Area = √(s(s − a)(s − b)(s − c))", ""],
+    ["Equilateral triangle", "Area = (√3 / 4) a²", "a = side"]
+  ]},
+  { topic: "Surface Areas and Volumes", items: [
+    ["Cuboid volume", "V = l × b × h", ""],
+    ["Cuboid total surface area", "2(lb + bh + hl)", ""],
+    ["Cube volume", "V = a³", ""],
+    ["Cube surface areas", "Lateral = 4a²; Total = 6a²", ""],
+    ["Cylinder volume", "V = πr²h", ""],
+    ["Cylinder surface areas", "Curved = 2πrh; Total = 2πr(r + h)", ""],
+    ["Slant height of a cone", "l = √(r² + h²)", ""],
+    ["Cone curved surface area", "πrl", "l = slant height"],
+    ["Cone total surface area", "πr(l + r)", ""],
+    ["Cone volume", "V = (1/3)πr²h", ""],
+    ["Sphere surface area", "4πr²", ""],
+    ["Sphere volume", "V = (4/3)πr³", ""],
+    ["Hemisphere curved surface area", "2πr²", ""],
+    ["Hemisphere total surface area", "3πr²", ""],
+    ["Hemisphere volume", "V = (2/3)πr³", ""]
+  ]},
+  { topic: "Statistics", items: [
+    ["Mean", "Sum of observations / Number of observations", ""],
+    ["Median (ungrouped)", "Middle value of the ordered data", "n odd: ((n + 1)/2)th value; n even: average of (n/2)th and (n/2 + 1)th"],
+    ["Mode (ungrouped)", "Value that occurs most often", ""],
+    ["Range", "Maximum − Minimum", ""]
+  ]},
+  { topic: "Probability", items: [
+    ["Probability", "P(E) = Favourable outcomes / Total outcomes", ""],
+    ["Range of probability", "0 ≤ P(E) ≤ 1", ""],
+    ["Complementary event", "P(not E) = 1 − P(E)", ""],
+    ["Sure event", "P(E) = 1", ""],
+    ["Impossible event", "P(E) = 0", ""]
+  ]}
+];
+
+const SYL_10 = [
+  { topic: "Real Numbers", items: [
+    ["Euclid's division lemma", "a = bq + r, where 0 ≤ r < b", "a and b are positive integers"],
+    ["HCF and LCM", "HCF(a, b) × LCM(a, b) = a × b", "for two positive integers"],
+    ["Terminating decimal", "p/q terminates if q (in lowest terms) has only the prime factors 2 and 5", "rule"],
+    ["Irrational square root", "√p is irrational for any prime p", "rule"],
+    ["Fundamental Theorem of Arithmetic", "Every composite number can be written as a product of primes in a unique way", "rule"]
+  ]},
+  { topic: "Polynomials", items: [
+    ["Zeros of a quadratic", "Sum of zeros = −b/a; Product of zeros = c/a", "for ax² + bx + c"],
+    ["Quadratic from its zeros", "x² − (sum of zeros)x + (product of zeros)", ""],
+    ["Zeros of a cubic", "Sum = −b/a; Sum of products in pairs = c/a; Product = −d/a", "for ax³ + bx² + cx + d"]
+  ]},
+  { topic: "Pair of Linear Equations in Two Variables", items: [
+    ["General form", "a₁x + b₁y + c₁ = 0 and a₂x + b₂y + c₂ = 0", ""],
+    ["Unique solution", "a₁/a₂ ≠ b₁/b₂", "lines intersect; consistent"],
+    ["Infinitely many solutions", "a₁/a₂ = b₁/b₂ = c₁/c₂", "coincident lines"],
+    ["No solution", "a₁/a₂ = b₁/b₂ ≠ c₁/c₂", "parallel lines"],
+    ["Cross-multiplication", "x / (b₁c₂ − b₂c₁) = y / (c₁a₂ − c₂a₁) = 1 / (a₁b₂ − a₂b₁)", "when a₁b₂ − a₂b₁ ≠ 0"]
+  ]},
+  { topic: "Quadratic Equations", items: [
+    ["Standard form", "ax² + bx + c = 0", "a ≠ 0"],
+    ["Quadratic formula", "x = (−b ± √(b² − 4ac)) / 2a", ""],
+    ["Discriminant", "D = b² − 4ac", ""],
+    ["Nature of roots", "D > 0: two distinct real roots; D = 0: two equal real roots; D < 0: no real roots", ""],
+    ["Sum of roots", "α + β = −b/a", ""],
+    ["Product of roots", "αβ = c/a", ""],
+    ["Completing the square", "(x + b/2a)² = (b² − 4ac) / 4a²", "method"]
+  ]},
+  { topic: "Arithmetic Progressions", items: [
+    ["nth term", "aₙ = a + (n − 1)d", "a = first term, d = common difference"],
+    ["Sum of n terms", "Sₙ = (n/2)[2a + (n − 1)d]", ""],
+    ["Sum using the last term", "Sₙ = (n/2)(a + l)", "l = last term"],
+    ["Common difference", "d = a₂ − a₁", ""],
+    ["nth term from the sum", "aₙ = Sₙ − Sₙ₋₁", ""]
+  ]},
+  { topic: "Triangles", items: [
+    ["Basic proportionality theorem", "If DE ∥ BC, then AD/DB = AE/EC", "Thales' theorem"],
+    ["Similarity criteria", "AA, SSS and SAS", "rule"],
+    ["Area of similar triangles", "Ratio of areas = (ratio of corresponding sides)²", ""],
+    ["Pythagoras theorem", "AC² = AB² + BC²", "right angle at B"],
+    ["Converse of Pythagoras", "If AC² = AB² + BC², then the angle at B is 90°", "rule"]
+  ]},
+  { topic: "Coordinate Geometry", items: [
+    ["Distance formula", "d = √((x₂ − x₁)² + (y₂ − y₁)²)", ""],
+    ["Section formula", "((mx₂ + nx₁)/(m + n), (my₂ + ny₁)/(m + n))", "internal division in the ratio m : n"],
+    ["Mid-point", "((x₁ + x₂)/2, (y₁ + y₂)/2)", ""],
+    ["Area of a triangle", "½ |x₁(y₂ − y₃) + x₂(y₃ − y₁) + x₃(y₁ − y₂)|", ""],
+    ["Centroid", "((x₁ + x₂ + x₃)/3, (y₁ + y₂ + y₃)/3)", ""]
+  ]},
+  { topic: "Introduction to Trigonometry", items: [
+    ["sin θ", "Opposite / Hypotenuse", ""],
+    ["cos θ", "Adjacent / Hypotenuse", ""],
+    ["tan θ", "Opposite / Adjacent = sin θ / cos θ", ""],
+    ["cosec θ, sec θ, cot θ", "1/sin θ, 1/cos θ, 1/tan θ", ""],
+    ["Identity 1", "sin²θ + cos²θ = 1", ""],
+    ["Identity 2", "1 + tan²θ = sec²θ", ""],
+    ["Identity 3", "1 + cot²θ = cosec²θ", ""],
+    ["Complementary angles", "sin(90° − θ) = cos θ; tan(90° − θ) = cot θ", ""],
+    ["Standard values of sin", "0, ½, 1/√2, √3/2, 1 for 0°, 30°, 45°, 60°, 90°", "cos takes these values in reverse order"],
+    ["Standard values of tan", "0, 1/√3, 1, √3, not defined for 0°, 30°, 45°, 60°, 90°", ""]
+  ]},
+  { topic: "Some Applications of Trigonometry", items: [
+    ["Height from an angle of elevation", "h = d × tan θ", "d = distance from the foot, θ = angle of elevation"],
+    ["Distance from an angle of elevation", "d = h × cot θ", "h = height of the object"],
+    ["Angle of depression", "Equal to the angle of elevation", "alternate angles"]
+  ]},
+  { topic: "Circles", items: [
+    ["Tangent and radius", "Tangent is perpendicular to the radius at the point of contact", "rule"],
+    ["Tangent length", "PA = PB", "tangents from an external point P"],
+    ["Number of tangents", "Exactly 2 from an external point", "rule"]
+  ]},
+  { topic: "Constructions", items: [
+    ["Dividing a line segment", "Divide in the ratio m : n using a ray at an acute angle", "rule"],
+    ["Tangent from an external point", "Join P to the centre O; draw a circle on OP as diameter", "rule"],
+    ["Similar triangle with scale factor", "Use a ray and parallel lines to scale each side by m/n", "rule"]
+  ]},
+  { topic: "Areas Related to Circles", items: [
+    ["Circumference", "C = 2πr", ""],
+    ["Area of a circle", "A = πr²", ""],
+    ["Length of an arc", "(θ / 360°) × 2πr", "θ = central angle"],
+    ["Area of a sector", "(θ / 360°) × πr²", ""],
+    ["Area of a segment", "Area of sector − Area of triangle", "rule"],
+    ["Area of a minor segment", "(θ / 360°)πr² − ½r² sin θ", "for a minor segment, θ < 180°"],
+    ["Area of a ring (annulus)", "π(R² − r²)", "R = outer radius, r = inner radius"]
+  ]},
+  { topic: "Surface Areas and Volumes", items: [
+    ["Cuboid", "V = lbh; Lateral surface area = 2h(l + b); Total = 2(lb + bh + hl)", ""],
+    ["Cube", "V = a³; Lateral surface area = 4a²; Total = 6a²", ""],
+    ["Cylinder", "V = πr²h; Curved surface area = 2πrh; Total = 2πr(r + h)", ""],
+    ["Cone", "V = (1/3)πr²h; Curved surface area = πrl; Total = πr(l + r)", "l = √(r² + h²)"],
+    ["Sphere", "V = (4/3)πr³; Surface area = 4πr²", ""],
+    ["Hemisphere", "V = (2/3)πr³; Curved surface area = 2πr²; Total = 3πr²", ""],
+    ["Frustum of a cone (volume)", "V = (πh/3)(R² + r² + Rr)", "R and r = radii of the two ends, h = height"],
+    ["Frustum (curved surface area)", "π(R + r)l", "l = √(h² + (R − r)²)"],
+    ["Frustum (total surface area)", "π[(R + r)l + R² + r²]", ""]
+  ]},
+  { topic: "Statistics", items: [
+    ["Mean (direct method)", "x̄ = Σfᵢxᵢ / Σfᵢ", ""],
+    ["Mean (assumed mean method)", "x̄ = a + (Σfᵢdᵢ) / Σfᵢ", "dᵢ = xᵢ − a"],
+    ["Mean (step deviation method)", "x̄ = a + ((Σfᵢuᵢ) / Σfᵢ) × h", "uᵢ = (xᵢ − a) / h"],
+    ["Median (grouped)", "Median = l + ((n/2 − cf)/f) × h", "l = lower limit of median class, cf = cumulative frequency before it, f = frequency of median class, h = class size"],
+    ["Mode (grouped)", "Mode = l + ((f₁ − f₀) / (2f₁ − f₀ − f₂)) × h", "f₁ = modal class frequency, f₀ and f₂ = frequencies before and after it"],
+    ["Empirical relation", "Mode = 3 Median − 2 Mean", "approximate relation"]
+  ]},
+  { topic: "Probability", items: [
+    ["Probability", "P(E) = Favourable outcomes / Total outcomes", ""],
+    ["Range of probability", "0 ≤ P(E) ≤ 1", ""],
+    ["Complement", "P(E) + P(not E) = 1", ""],
+    ["Playing cards", "52 cards: 4 suits with 13 cards each; 4 aces and 4 kings", "rule"],
+    ["Dice", "6 faces; P(a particular number) = 1/6", "rule"]
+  ]}
+];
+
+const SYL_11 = [
+  { topic: "Sets", items: [
+    ["Union", "A ∪ B = {x : x ∈ A or x ∈ B}", ""],
+    ["Intersection", "A ∩ B = {x : x ∈ A and x ∈ B}", ""],
+    ["Difference", "A − B = A ∩ B′", ""],
+    ["Elements in a union", "n(A ∪ B) = n(A) + n(B) − n(A ∩ B)", ""],
+    ["De Morgan's laws", "(A ∪ B)′ = A′ ∩ B′ and (A ∩ B)′ = A′ ∪ B′", ""],
+    ["Power set", "n(P(A)) = 2ⁿ, where n = n(A)", ""],
+    ["Cartesian product", "n(A × B) = n(A) × n(B)", ""]
+  ]},
+  { topic: "Relations and Functions", items: [
+    ["Cartesian product", "A × B = {(a, b) : a ∈ A, b ∈ B}", ""],
+    ["Number of relations", "2^(n(A) × n(B)) relations from A to B", ""],
+    ["Function", "Each element of A has exactly one image in B", "rule"],
+    ["Composition", "(f ∘ g)(x) = f(g(x))", ""],
+    ["Domain and range", "Domain = set of inputs; Range = set of outputs", ""]
+  ]},
+  { topic: "Trigonometric Functions", items: [
+    ["sin(A + B)", "sin A cos B + cos A sin B", ""],
+    ["sin(A − B)", "sin A cos B − cos A sin B", ""],
+    ["cos(A + B)", "cos A cos B − sin A sin B", ""],
+    ["cos(A − B)", "cos A cos B + sin A sin B", ""],
+    ["tan(A + B)", "(tan A + tan B) / (1 − tan A tan B)", ""],
+    ["Double angle (sine)", "sin 2A = 2 sin A cos A", ""],
+    ["Double angle (cosine)", "cos 2A = cos²A − sin²A = 2cos²A − 1 = 1 − 2sin²A", ""],
+    ["Double angle (tangent)", "tan 2A = 2 tan A / (1 − tan²A)", ""],
+    ["Product to sum", "2 sin A cos B = sin(A + B) + sin(A − B)", ""],
+    ["Pythagorean identity", "sin²x + cos²x = 1", ""],
+    ["Periodicity", "sin(x + 2π) = sin x; tan(x + π) = tan x", ""]
+  ]},
+  { topic: "Complex Numbers and Quadratic Equations", items: [
+    ["Imaginary unit", "i = √−1, so i² = −1", ""],
+    ["Complex number", "z = a + ib", "a = real part, b = imaginary part"],
+    ["Conjugate", "z̄ = a − ib", ""],
+    ["Modulus", "|z| = √(a² + b²)", ""],
+    ["Product with conjugate", "z × z̄ = a² + b²", ""],
+    ["Inverse of a complex number", "1/z = z̄ / |z|²", "z ≠ 0"],
+    ["Powers of i", "i⁴ = 1; the powers of i repeat every four", "rule"],
+    ["Quadratic roots", "x = (−b ± √D) / 2a; when D < 0 the roots are complex", ""],
+    ["Argument", "tan θ = b / a", "θ is the argument of z"]
+  ]},
+  { topic: "Linear Inequalities", items: [
+    ["Addition rule", "If a < b, then a + c < b + c", ""],
+    ["Multiplying by a positive number", "If a < b and c > 0, then ac < bc", ""],
+    ["Multiplying by a negative number", "If a < b and c < 0, then ac > bc", "the inequality sign reverses"],
+    ["Interval notation", "(a, b) = {x : a < x < b}", ""],
+    ["Absolute value (less than)", "|x| < a ⇔ −a < x < a", "a > 0"],
+    ["Absolute value (greater than)", "|x| > a ⇔ x < −a or x > a", "a > 0"]
+  ]},
+  { topic: "Permutations and Combinations", items: [
+    ["Factorial", "n! = n × (n − 1) × … × 1", "0! = 1"],
+    ["Permutations", "ⁿPᵣ = n! / (n − r)!", ""],
+    ["Combinations", "ⁿCᵣ = n! / (r! (n − r)!)", ""],
+    ["Symmetry", "ⁿCᵣ = ⁿCₙ₋ᵣ", ""],
+    ["Pascal's identity", "ⁿCᵣ + ⁿCᵣ₋₁ = ⁿ⁺¹Cᵣ", ""],
+    ["Permutations and combinations", "ⁿPᵣ = r! × ⁿCᵣ", ""]
+  ]},
+  { topic: "Binomial Theorem", items: [
+    ["Binomial expansion", "(a + b)ⁿ = Σ (r = 0 to n) ⁿCᵣ aⁿ⁻ʳ bʳ", ""],
+    ["General term", "Tᵣ₊₁ = ⁿCᵣ aⁿ⁻ʳ bʳ", ""],
+    ["Number of terms", "n + 1", ""],
+    ["Middle term", "n even: T(n/2 + 1); n odd: two middle terms T((n + 1)/2) and T((n + 3)/2)", ""],
+    ["Sum of binomial coefficients", "ⁿC₀ + ⁿC₁ + … + ⁿCₙ = 2ⁿ", ""]
+  ]},
+  { topic: "Sequences and Series", items: [
+    ["AP nth term", "aₙ = a + (n − 1)d", ""],
+    ["AP sum", "Sₙ = (n/2)[2a + (n − 1)d]", ""],
+    ["GP nth term", "aₙ = a rⁿ⁻¹", "r = common ratio"],
+    ["GP sum", "Sₙ = a(rⁿ − 1) / (r − 1), r ≠ 1", ""],
+    ["Sum of an infinite GP", "S∞ = a / (1 − r), for |r| < 1", ""],
+    ["Arithmetic mean", "AM = (a + b) / 2", ""],
+    ["Geometric mean", "GM = √(ab)", ""],
+    ["Harmonic mean", "HM = 2ab / (a + b)", ""],
+    ["Sum of first n natural numbers", "n(n + 1) / 2", ""],
+    ["Sum of squares", "1² + 2² + … + n² = n(n + 1)(2n + 1) / 6", ""],
+    ["Sum of cubes", "1³ + 2³ + … + n³ = [n(n + 1) / 2]²", ""]
+  ]},
+  { topic: "Straight Lines", items: [
+    ["Slope", "m = (y₂ − y₁) / (x₂ − x₁)", ""],
+    ["Slope-intercept form", "y = mx + c", "c = y-intercept"],
+    ["Point-slope form", "y − y₁ = m(x − x₁)", ""],
+    ["Two-point form", "(y − y₁) / (y₂ − y₁) = (x − x₁) / (x₂ − x₁)", ""],
+    ["Intercept form", "x/a + y/b = 1", "a and b are the intercepts"],
+    ["Normal form", "x cos ω + y sin ω = p", "p = length of the perpendicular from the origin"],
+    ["General form", "Ax + By + C = 0", ""],
+    ["Distance from a point to a line", "|Ax₁ + By₁ + C| / √(A² + B²)", ""],
+    ["Angle between two lines", "tan θ = |(m₂ − m₁) / (1 + m₁m₂)|", ""],
+    ["Parallel lines", "m₁ = m₂", ""],
+    ["Perpendicular lines", "m₁ × m₂ = −1", ""]
+  ]},
+  { topic: "Conic Sections", items: [
+    ["Circle", "(x − h)² + (y − k)² = r²", "centre (h, k), radius r"],
+    ["Parabola", "y² = 4ax", "vertex at the origin, focus (a, 0)"],
+    ["Ellipse", "x²/a² + y²/b² = 1 (a > b)", "c² = a² − b²"],
+    ["Hyperbola", "x²/a² − y²/b² = 1", "c² = a² + b²"],
+    ["Eccentricity", "e = c / a", "ellipse: e < 1; parabola: e = 1; hyperbola: e > 1"]
+  ]},
+  { topic: "Introduction to Three Dimensional Geometry", items: [
+    ["Distance between two points", "√((x₂ − x₁)² + (y₂ − y₁)² + (z₂ − z₁)²)", ""],
+    ["Section formula", "((mx₂ + nx₁)/(m + n), (my₂ + ny₁)/(m + n), (mz₂ + nz₁)/(m + n))", ""],
+    ["Mid-point", "((x₁ + x₂)/2, (y₁ + y₂)/2, (z₁ + z₂)/2)", ""]
+  ]},
+  { topic: "Limits and Derivatives", items: [
+    ["Derivative from first principles", "f′(x) = lim (h → 0) [f(x + h) − f(x)] / h", ""],
+    ["Limit of a power", "lim (x → a) (xⁿ − aⁿ) / (x − a) = n aⁿ⁻¹", ""],
+    ["Standard limit", "lim (x → 0) sin x / x = 1", ""],
+    ["Power rule", "d/dx (xⁿ) = n xⁿ⁻¹", ""],
+    ["Derivative of sin x", "d/dx (sin x) = cos x", ""],
+    ["Derivative of cos x", "d/dx (cos x) = −sin x", ""],
+    ["Derivative of tan x", "d/dx (tan x) = sec²x", ""],
+    ["Derivative of eˣ", "d/dx (eˣ) = eˣ", ""],
+    ["Derivative of ln x", "d/dx (ln x) = 1/x", "x > 0"],
+    ["Sum rule", "(f + g)′ = f′ + g′", ""],
+    ["Product rule", "(uv)′ = u′v + uv′", ""],
+    ["Quotient rule", "(u/v)′ = (u′v − uv′) / v²", ""]
+  ]},
+  { topic: "Statistics", items: [
+    ["Range", "Maximum − Minimum", ""],
+    ["Mean deviation", "M.D. = Σ|xᵢ − x̄| / n", "deviations taken about the mean"],
+    ["Variance", "σ² = (1/n) Σ(xᵢ − x̄)²", ""],
+    ["Standard deviation", "σ = √(variance)", ""],
+    ["Shortcut for variance", "σ² = (1/n) Σxᵢ² − x̄²", ""],
+    ["Coefficient of variation", "C.V. = (σ / x̄) × 100", ""]
+  ]},
+  { topic: "Probability", items: [
+    ["Probability", "P(E) = n(E) / n(S)", ""],
+    ["Addition theorem", "P(A ∪ B) = P(A) + P(B) − P(A ∩ B)", ""],
+    ["Complement", "P(A′) = 1 − P(A)", ""],
+    ["Conditional probability", "P(A|B) = P(A ∩ B) / P(B)", "P(B) ≠ 0"],
+    ["Multiplication theorem", "P(A ∩ B) = P(A) × P(B|A)", ""],
+    ["Independent events", "P(A ∩ B) = P(A) × P(B)", ""]
+  ]},
+  { topic: "Mathematical Reasoning", items: [
+    ["Contrapositive", "p ⇒ q is equivalent to (not q) ⇒ (not p)", ""],
+    ["De Morgan's laws (logic)", "not (p and q) = (not p) or (not q); not (p or q) = (not p) and (not q)", ""],
+    ["Implication", "p ⇒ q is false only when p is true and q is false", "rule"]
+  ]}
+];
+
+const SYL_12 = [
+  { topic: "Relations and Functions", items: [
+    ["Reflexive relation", "(a, a) ∈ R for every a in A", "rule"],
+    ["Symmetric relation", "(a, b) ∈ R ⇒ (b, a) ∈ R", "rule"],
+    ["Transitive relation", "(a, b) ∈ R and (b, c) ∈ R ⇒ (a, c) ∈ R", "rule"],
+    ["Equivalence relation", "Reflexive + symmetric + transitive", ""],
+    ["Number of relations", "2^(n²) for a set with n elements", ""],
+    ["Number of reflexive relations", "2^(n² − n)", ""],
+    ["Composition", "(f ∘ g)(x) = f(g(x))", ""],
+    ["Invertible function", "f is invertible if and only if f is one-one and onto (bijective)", "rule"]
+  ]},
+  { topic: "Inverse Trigonometric Functions", items: [
+    ["Sum rule (sine and cosine)", "sin⁻¹x + cos⁻¹x = π/2", "−1 ≤ x ≤ 1"],
+    ["Sum rule (tangent and cotangent)", "tan⁻¹x + cot⁻¹x = π/2", ""],
+    ["Sum rule (secant and cosecant)", "sec⁻¹x + cosec⁻¹x = π/2", "|x| ≥ 1"],
+    ["Addition", "tan⁻¹x + tan⁻¹y = tan⁻¹((x + y) / (1 − xy))", "xy < 1"],
+    ["Subtraction", "tan⁻¹x − tan⁻¹y = tan⁻¹((x − y) / (1 + xy))", "xy > −1"],
+    ["Double angle", "2 tan⁻¹x = sin⁻¹(2x / (1 + x²))", "|x| ≤ 1"],
+    ["Negative argument", "sin⁻¹(−x) = −sin⁻¹x", ""],
+    ["Principal ranges", "sin⁻¹: [−π/2, π/2]; cos⁻¹: [0, π]; tan⁻¹: (−π/2, π/2)", ""]
+  ]},
+  { topic: "Matrices", items: [
+    ["Transpose", "(Aᵀ)ᵢⱼ = Aⱼᵢ", "rows and columns are swapped"],
+    ["Transpose of a product", "(AB)ᵀ = BᵀAᵀ", ""],
+    ["Symmetric matrix", "Aᵀ = A", ""],
+    ["Skew-symmetric matrix", "Aᵀ = −A", "diagonal entries are 0"],
+    ["Matrix multiplication", "(AB)ᵢⱼ = Σₖ aᵢₖ bₖⱼ", "number of columns of A = number of rows of B"],
+    ["Inverse", "A⁻¹ = adj(A) / |A|", "|A| ≠ 0"],
+    ["Inverse property", "A A⁻¹ = A⁻¹ A = I", ""],
+    ["Adjoint of a 2 × 2 matrix", "adj [a b; c d] = [d −b; −c a]", ""]
+  ]},
+  { topic: "Determinants", items: [
+    ["2 × 2 determinant", "|a b; c d| = ad − bc", ""],
+    ["3 × 3 expansion", "a(ei − fh) − b(di − fg) + c(dh − eg)", "expansion along the first row"],
+    ["Product rule", "|AB| = |A| × |B|", ""],
+    ["Transpose rule", "|Aᵀ| = |A|", ""],
+    ["Scalar multiple", "|kA| = kⁿ |A|", "A is an n × n matrix"],
+    ["Singular matrix", "|A| = 0 means A has no inverse", ""],
+    ["Area of a triangle", "Area = ½ |determinant|", "vertices (x₁, y₁), (x₂, y₂), (x₃, y₃)"],
+    ["Cramer's rule", "x = Dₓ / D, y = D_y / D", "D ≠ 0"]
+  ]},
+  { topic: "Continuity and Differentiability", items: [
+    ["Chain rule", "d/dx f(g(x)) = f′(g(x)) × g′(x)", ""],
+    ["Derivative of sin⁻¹x", "1 / √(1 − x²)", "|x| < 1"],
+    ["Derivative of cos⁻¹x", "−1 / √(1 − x²)", "|x| < 1"],
+    ["Derivative of tan⁻¹x", "1 / (1 + x²)", ""],
+    ["Derivative of aˣ", "aˣ ln a", "a > 0"],
+    ["Derivative of logₐx", "1 / (x ln a)", "x > 0, a > 0, a ≠ 1"],
+    ["Parametric derivative", "dy/dx = (dy/dt) / (dx/dt)", ""],
+    ["Second derivative", "d²y/dx² = d/dx (dy/dx)", ""],
+    ["Rolle's theorem", "If f(a) = f(b), there is c in (a, b) with f′(c) = 0", "f continuous on [a, b] and differentiable on (a, b)"],
+    ["Mean value theorem", "f′(c) = (f(b) − f(a)) / (b − a)", "for some c in (a, b)"]
+  ]},
+  { topic: "Application of Derivatives", items: [
+    ["Rate of change", "dy/dt = (dy/dx) × (dx/dt)", ""],
+    ["Tangent line", "y − y₁ = f′(x₁)(x − x₁)", ""],
+    ["Normal line", "y − y₁ = −(x − x₁) / f′(x₁)", "f′(x₁) ≠ 0"],
+    ["Increasing and decreasing", "f′(x) > 0 means increasing; f′(x) < 0 means decreasing", ""],
+    ["Maximum and minimum", "f′(x) = 0 and f″(x) < 0 gives a maximum; f″(x) > 0 gives a minimum", "second derivative test"],
+    ["Approximation", "f(x + Δx) ≈ f(x) + f′(x) Δx", ""]
+  ]},
+  { topic: "Integrals", items: [
+    ["Power rule", "∫xⁿ dx = xⁿ⁺¹ / (n + 1) + C, n ≠ −1", ""],
+    ["Integral of eˣ", "∫eˣ dx = eˣ + C", ""],
+    ["Integral of 1/x", "∫(1/x) dx = ln|x| + C", ""],
+    ["Integral of sin x", "∫sin x dx = −cos x + C", ""],
+    ["Integral of cos x", "∫cos x dx = sin x + C", ""],
+    ["Integral of sec²x", "∫sec²x dx = tan x + C", ""],
+    ["Integral of cosec²x", "∫cosec²x dx = −cot x + C", ""],
+    ["Integral of sec x tan x", "∫sec x tan x dx = sec x + C", ""],
+    ["Integral of cosec x cot x", "∫cosec x cot x dx = −cosec x + C", ""],
+    ["Integral of 1/(1 + x²)", "∫1/(1 + x²) dx = tan⁻¹x + C", ""],
+    ["Integral of 1/√(1 − x²)", "∫1/√(1 − x²) dx = sin⁻¹x + C", "|x| < 1"],
+    ["Integral of 1/(x² + a²)", "∫1/(x² + a²) dx = (1/a) tan⁻¹(x/a) + C", ""],
+    ["Integral of 1/(x² − a²)", "∫1/(x² − a²) dx = (1/2a) ln|(x − a)/(x + a)| + C", ""],
+    ["Integral of 1/√(x² − a²)", "∫1/√(x² − a²) dx = ln|x + √(x² − a²)| + C", ""],
+    ["Integral of 1/√(a² − x²)", "∫1/√(a² − x²) dx = sin⁻¹(x/a) + C", ""],
+    ["Integration by parts", "∫u dv = uv − ∫v du", ""],
+    ["Definite integral", "∫(a to b) f(x) dx = F(b) − F(a), where F′ = f", ""],
+    ["Property (reverse limits)", "∫(a to b) f(x) dx = −∫(b to a) f(x) dx", ""],
+    ["Property (symmetry)", "∫(a to b) f(x) dx = ∫(a to b) f(a + b − x) dx", ""],
+    ["Special integral", "∫ eˣ(f(x) + f′(x)) dx = eˣ f(x) + C", ""]
+  ]},
+  { topic: "Application of Integrals", items: [
+    ["Area under a curve", "A = ∫(a to b) y dx", "y ≥ 0 on [a, b]"],
+    ["Area between two curves", "A = ∫(a to b) (y_top − y_bottom) dx", ""],
+    ["Area of a circle", "πr² (from x² + y² = r²)", "found by integration"],
+    ["Area of an ellipse", "πab", "x²/a² + y²/b² = 1"]
+  ]},
+  { topic: "Differential Equations", items: [
+    ["Order", "The highest order of derivative in the equation", ""],
+    ["Degree", "The power of the highest order derivative, when the equation is a polynomial in the derivatives", ""],
+    ["Variable separable", "∫f(y) dy = ∫g(x) dx + C", ""],
+    ["Linear first-order equation", "dy/dx + Py = Q", "P and Q are functions of x"],
+    ["Integrating factor", "IF = e^(∫P dx)", ""],
+    ["Solution of a linear equation", "y × IF = ∫(Q × IF) dx + C", ""]
+  ]},
+  { topic: "Vector Algebra", items: [
+    ["Magnitude", "|a| = √(a₁² + a₂² + a₃²)", ""],
+    ["Unit vector", "â = a / |a|", "a ≠ 0"],
+    ["Dot product (components)", "a · b = a₁b₁ + a₂b₂ + a₃b₃", ""],
+    ["Dot product (angle)", "a · b = |a||b| cos θ", ""],
+    ["Angle between vectors", "cos θ = (a · b) / (|a||b|)", ""],
+    ["Projection of a on b", "(a · b) / |b|", ""],
+    ["Cross product magnitude", "|a × b| = |a||b| sin θ", ""],
+    ["Cross product (components)", "a × b = determinant with rows i j k; a₁ a₂ a₃; b₁ b₂ b₃", ""],
+    ["Scalar triple product", "[a b c] = a · (b × c)", ""],
+    ["Area of a parallelogram", "|a × b|", ""],
+    ["Area of a triangle", "½ |a × b|", ""],
+    ["Section formula", "(mb + na) / (m + n)", "divides the points a and b in the ratio m : n"]
+  ]},
+  { topic: "Three Dimensional Geometry", items: [
+    ["Direction cosines", "l = cos α, m = cos β, n = cos γ; l² + m² + n² = 1", ""],
+    ["Direction cosines from ratios", "l = a / √(a² + b² + c²), and similarly for m and n", "a, b, c = direction ratios"],
+    ["Line (Cartesian form)", "(x − x₁)/a = (y − y₁)/b = (z − z₁)/c", ""],
+    ["Line (vector form)", "r = a + λb", ""],
+    ["Angle between two lines", "cos θ = |a₁a₂ + b₁b₂ + c₁c₂| / (√(a₁² + b₁² + c₁²) √(a₂² + b₂² + c₂²))", ""],
+    ["Plane (general form)", "ax + by + cz + d = 0", ""],
+    ["Plane (normal form)", "lx + my + nz = p", "l, m, n = direction cosines of the normal"],
+    ["Distance from a point to a plane", "|ax₁ + by₁ + cz₁ + d| / √(a² + b² + c²)", ""],
+    ["Angle between two planes", "cos θ = |a₁a₂ + b₁b₂ + c₁c₂| / (√(a₁² + b₁² + c₁²) √(a₂² + b₂² + c₂²))", "uses the normals"],
+    ["Angle between a line and a plane", "sin θ = |al + bm + cn| / (√(a² + b² + c²) √(l² + m² + n²))", "(a, b, c) normal to the plane; (l, m, n) direction of the line"]
+  ]},
+  { topic: "Linear Programming", items: [
+    ["Objective function", "Z = ax + by", "to be maximised or minimised"],
+    ["Constraints", "Linear inequalities in x and y", "x ≥ 0 and y ≥ 0 are usually included"],
+    ["Corner point method", "Evaluate Z at each corner of the feasible region", "the optimal value is at a corner point"]
+  ]},
+  { topic: "Probability", items: [
+    ["Conditional probability", "P(E|F) = P(E ∩ F) / P(F)", "P(F) ≠ 0"],
+    ["Multiplication rule", "P(E ∩ F) = P(E) × P(F|E)", ""],
+    ["Independent events", "P(E ∩ F) = P(E) × P(F)", ""],
+    ["Total probability", "P(A) = Σ P(Eᵢ) P(A|Eᵢ)", "the Eᵢ form a partition of the sample space"],
+    ["Bayes' theorem", "P(Eᵢ|A) = P(Eᵢ) P(A|Eᵢ) / Σ P(Eⱼ) P(A|Eⱼ)", ""],
+    ["Mean of a random variable", "E(X) = Σ xᵢ pᵢ", ""],
+    ["Variance of a random variable", "Var(X) = E(X²) − [E(X)]²", ""],
+    ["Binomial distribution", "P(X = r) = ⁿCᵣ pʳ qⁿ⁻ʳ, where q = 1 − p", ""],
+    ["Mean and variance of a binomial distribution", "Mean = np; Variance = npq", ""]
+  ]}
+];
+
+  // Default content bank for the Daily Learning Hub.
+// Published content can be replaced by uploading daily-content.json next to index.html.
+const HUB_BANK = {
+  questions: [
+    { id: "q01", cls: 8, topic: "Rational Numbers", q: "Which rational number lies between 1/2 and 3/4?",
+      options: ["5/8", "1/4", "1/8", "7/8"], ans: 0,
+      exp: "The average of 1/2 and 3/4 is (2/4 + 3/4) ÷ 2 = 5/8. Since 1/2 = 0.5, 5/8 = 0.625 and 3/4 = 0.75, the value 5/8 lies between them." },
+    { id: "q02", cls: 8, topic: "Squares and Square Roots", q: "What is √144 + √64?",
+      options: ["18", "20", "24", "22"], ans: 1,
+      exp: "√144 = 12 and √64 = 8. So 12 + 8 = 20." },
+    { id: "q03", cls: 8, topic: "Algebraic Expressions and Identities", q: "Expand (x + 3)².",
+      options: ["x² + 9", "x² + 6x + 9", "x² + 3x + 9", "x² + 6x + 3"], ans: 1,
+      exp: "Using (a + b)² = a² + 2ab + b² with a = x and b = 3: x² + 2(x)(3) + 9 = x² + 6x + 9." },
+    { id: "q04", cls: 8, topic: "Linear Equations in One Variable", q: "Solve 3x − 7 = 14.",
+      options: ["x = 7", "x = 3", "x = 21", "x = 7/3"], ans: 0,
+      exp: "Add 7 to both sides: 3x = 21. Divide by 3: x = 7." },
+    { id: "q05", cls: 8, topic: "Exponents and Powers", q: "Simplify 2³ × 2⁴.",
+      options: ["2¹²", "2⁷", "4⁷", "2¹"], ans: 1,
+      exp: "When the bases are the same, add the powers: 2³ × 2⁴ = 2³⁺⁴ = 2⁷ = 128." },
+    { id: "q06", cls: 8, topic: "Comparing Quantities", q: "A shirt costs ₹400 and is sold at a 15% discount. What is the selling price?",
+      options: ["₹340", "₹385", "₹360", "₹300"], ans: 0,
+      exp: "15% of ₹400 = ₹60. So the selling price is ₹400 − ₹60 = ₹340." },
+    { id: "q07", cls: 8, topic: "Mensuration", q: "What is the area of a rectangle that is 12 cm long and 5 cm broad?",
+      options: ["17 cm²", "60 cm²", "34 cm²", "120 cm²"], ans: 1,
+      exp: "Area of a rectangle = length × breadth = 12 × 5 = 60 cm²." },
+    { id: "q08", cls: 9, topic: "Number Systems", q: "Which of these is an irrational number?",
+      options: ["0.75", "√16", "√2", "22/7"], ans: 2,
+      exp: "√2 is non-terminating and non-repeating, so it is irrational. √16 = 4, 0.75 is a terminating decimal, and 22/7 is a fraction, so it is rational." },
+    { id: "q09", cls: 9, topic: "Polynomials", q: "Factorise x² − 9.",
+      options: ["(x − 3)(x + 3)", "(x − 9)(x + 1)", "(x − 3)²", "(x + 3)²"], ans: 0,
+      exp: "x² − 9 = x² − 3² is a difference of two squares, so it equals (x − 3)(x + 3)." },
+    { id: "q10", cls: 9, topic: "Lines and Angles", q: "Two angles form a linear pair in the ratio 2 : 3. What is the smaller angle?",
+      options: ["72°", "108°", "36°", "90°"], ans: 0,
+      exp: "A linear pair adds up to 180°. The parts are 2 + 3 = 5, so each part is 180° ÷ 5 = 36°. The smaller angle is 2 × 36° = 72°." },
+    { id: "q11", cls: 9, topic: "Triangles", q: "The angles of a triangle are in the ratio 2 : 3 : 4. What is the largest angle?",
+      options: ["60°", "80°", "90°", "100°"], ans: 1,
+      exp: "The angles add up to 180°. The parts are 2 + 3 + 4 = 9, so one part is 20°. The largest angle is 4 × 20° = 80°." },
+    { id: "q12", cls: 9, topic: "Heron's Formula", q: "What is the area of an equilateral triangle with side 6 cm?",
+      options: ["9√3 cm²", "18√3 cm²", "6√3 cm²", "36 cm²"], ans: 0,
+      exp: "Area = (√3 / 4) × a² = (√3 / 4) × 36 = 9√3 cm²." },
+    { id: "q13", cls: 9, topic: "Statistics", q: "What is the mean of 4, 8, 6, 10 and 2?",
+      options: ["5", "6", "7", "8"], ans: 1,
+      exp: "Sum = 4 + 8 + 6 + 10 + 2 = 30. Mean = 30 ÷ 5 = 6." },
+    { id: "q14", cls: 10, topic: "Real Numbers", q: "What is the HCF of 12 and 18?",
+      options: ["2", "3", "6", "36"], ans: 2,
+      exp: "12 = 2² × 3 and 18 = 2 × 3². The common prime factors with the lowest powers are 2 and 3, so HCF = 2 × 3 = 6." },
+    { id: "q15", cls: 10, topic: "Quadratic Equations", q: "What are the roots of x² − 5x + 6 = 0?",
+      options: ["x = 1, 6", "x = 2, 3", "x = −2, −3", "x = 5, 1"], ans: 1,
+      exp: "Factorise: x² − 5x + 6 = (x − 2)(x − 3) = 0. So x = 2 or x = 3." },
+    { id: "q16", cls: 10, topic: "Quadratic Equations", q: "What is the discriminant of 2x² + 3x + 5 = 0?",
+      options: ["31", "−31", "49", "−49"], ans: 1,
+      exp: "D = b² − 4ac = 3² − 4 × 2 × 5 = 9 − 40 = −31. Since D < 0, the equation has no real roots." },
+    { id: "q17", cls: 10, topic: "Arithmetic Progressions", q: "What is the nth term of the AP 3, 7, 11, ...?",
+      options: ["4n + 1", "4n − 1", "3n + 4", "n + 2"], ans: 1,
+      exp: "First term a = 3 and common difference d = 4. The nth term is a + (n − 1)d = 3 + 4n − 4 = 4n − 1. Check: for n = 1 it gives 3." },
+    { id: "q18", cls: 10, topic: "Introduction to Trigonometry", q: "If sin θ = 1/2, what is θ?",
+      options: ["30°", "45°", "60°", "90°"], ans: 0,
+      exp: "sin 30° = 1/2, so θ = 30°." },
+    { id: "q19", cls: 10, topic: "Circles", q: "A point is 10 cm from the centre of a circle of radius 6 cm. What is the length of the tangent from this point?",
+      options: ["4 cm", "8 cm", "16 cm", "√136 cm"], ans: 1,
+      exp: "The tangent is perpendicular to the radius, so by Pythagoras: length² = 10² − 6² = 100 − 36 = 64. Length = 8 cm." },
+    { id: "q20", cls: 10, topic: "Coordinate Geometry", q: "What is the distance between the points (0, 0) and (3, 4)?",
+      options: ["5", "7", "1", "25"], ans: 0,
+      exp: "Distance = √((3 − 0)² + (4 − 0)²) = √(9 + 16) = √25 = 5." },
+    { id: "q21", cls: 10, topic: "Probability", q: "What is the probability of drawing a king from a well-shuffled pack of 52 cards?",
+      options: ["1/52", "1/13", "4/13", "1/4"], ans: 1,
+      exp: "There are 4 kings in 52 cards. P = 4/52 = 1/13." },
+    { id: "q22", cls: 10, topic: "Areas Related to Circles", q: "What is the circumference of a circle with radius 7 cm? (Take π = 22/7)",
+      options: ["22 cm", "44 cm", "154 cm", "49 cm"], ans: 1,
+      exp: "Circumference = 2πr = 2 × 22/7 × 7 = 44 cm." },
+    { id: "q23", cls: 11, topic: "Sets", q: "If n(A) = 5, n(B) = 4 and n(A ∩ B) = 2, what is n(A ∪ B)?",
+      options: ["9", "7", "11", "2"], ans: 1,
+      exp: "n(A ∪ B) = n(A) + n(B) − n(A ∩ B) = 5 + 4 − 2 = 7." },
+    { id: "q24", cls: 11, topic: "Permutations and Combinations", q: "What is the value of 5!?",
+      options: ["25", "120", "60", "24"], ans: 1,
+      exp: "5! = 5 × 4 × 3 × 2 × 1 = 120." },
+    { id: "q25", cls: 11, topic: "Binomial Theorem", q: "How many terms are there in the expansion of (a + b)⁶?",
+      options: ["6", "7", "5", "12"], ans: 1,
+      exp: "The expansion of (a + b)ⁿ has n + 1 terms. Here n = 6, so there are 7 terms." },
+    { id: "q26", cls: 11, topic: "Sequences and Series", q: "What is the sum of the first 10 natural numbers?",
+      options: ["45", "55", "50", "100"], ans: 1,
+      exp: "Sum = n(n + 1) / 2 = 10 × 11 / 2 = 55." },
+    { id: "q27", cls: 11, topic: "Straight Lines", q: "What is the slope of the line through (1, 2) and (3, 6)?",
+      options: ["1/2", "2", "4", "−2"], ans: 1,
+      exp: "Slope = (6 − 2) / (3 − 1) = 4 / 2 = 2." },
+    { id: "q28", cls: 11, topic: "Limits and Derivatives", q: "What is lim (x → 2) of (x² − 4) / (x − 2)?",
+      options: ["0", "2", "4", "Does not exist"], ans: 2,
+      exp: "Factorise the top: (x² − 4) = (x − 2)(x + 2). Cancel (x − 2) to get x + 2, which tends to 4 as x → 2." },
+    { id: "q29", cls: 11, topic: "Trigonometric Functions", q: "What is the value of sin 90°?",
+      options: ["0", "1", "−1", "1/2"], ans: 1,
+      exp: "sin 90° = 1. The sine value rises from 0 at 0° to 1 at 90°." },
+    { id: "q30", cls: 11, topic: "Complex Numbers", q: "What is the value of i⁴?",
+      options: ["−1", "i", "1", "−i"], ans: 2,
+      exp: "i² = −1, so i⁴ = (i²)² = (−1)² = 1." },
+    { id: "q31", cls: 12, topic: "Matrices and Determinants", q: "If A = [[1, 2], [3, 4]], what is det A?",
+      options: ["−2", "2", "10", "−10"], ans: 0,
+      exp: "det A = (1 × 4) − (2 × 3) = 4 − 6 = −2." },
+    { id: "q32", cls: 12, topic: "Continuity and Differentiability", q: "What is the derivative of x³ with respect to x?",
+      options: ["x²", "3x²", "3x³", "x³ / 3"], ans: 1,
+      exp: "Using the power rule, d/dx (xⁿ) = n xⁿ⁻¹. So d/dx (x³) = 3x²." },
+    { id: "q33", cls: 12, topic: "Integrals", q: "What is ∫ 2x dx?",
+      options: ["x² + C", "2 + C", "2x² + C", "x + C"], ans: 0,
+      exp: "∫ 2x dx = 2 × x²/2 + C = x² + C." },
+    { id: "q34", cls: 12, topic: "Vector Algebra", q: "What is the magnitude of the vector 3i + 4j?",
+      options: ["7", "5", "25", "1"], ans: 1,
+      exp: "|3i + 4j| = √(3² + 4²) = √25 = 5." },
+    { id: "q35", cls: 12, topic: "Probability", q: "A fair die is rolled once. What is the probability of getting an even number?",
+      options: ["1/6", "1/3", "1/2", "2/3"], ans: 2,
+      exp: "The even numbers are 2, 4 and 6, which is 3 out of 6 outcomes. P = 3/6 = 1/2." },
+    { id: "q36", cls: 12, topic: "Inverse Trigonometric Functions", q: "What is sin⁻¹(1)?",
+      options: ["0", "π/2", "π", "π/4"], ans: 1,
+      exp: "sin⁻¹(1) is the angle whose sine is 1. That angle is π/2 (90°)." },
+    { id: "q37", cls: 12, topic: "Application of Derivatives", q: "What is the slope of the tangent to y = x² at x = 3?",
+      options: ["3", "6", "9", "2"], ans: 1,
+      exp: "dy/dx = 2x. At x = 3, the slope is 2 × 3 = 6." }
+  ],
+
+  challenges: [
+    { id: "c01", cls: 8, topic: "Percentage", q: "What is 25% of 480?", ans: 120,
+      hint: "25% is the same as 1/4.", sol: "25% of 480 = 480 ÷ 4 = 120." },
+    { id: "c02", cls: 8, topic: "Linear Equations", q: "Find x if 5x + 3 = 28.", ans: 5,
+      hint: "Move the 3 to the other side first.", sol: "5x = 28 − 3 = 25, so x = 25 ÷ 5 = 5." },
+    { id: "c03", cls: 8, topic: "Exponents and Powers", q: "What is 2⁵ − 2⁴?", ans: 16,
+      hint: "Write out 2⁵ and 2⁴ as numbers.", sol: "2⁵ = 32 and 2⁴ = 16. So 32 − 16 = 16." },
+    { id: "c04", cls: 8, topic: "Mensuration", q: "A square has a perimeter of 36 cm. What is its area in cm²?", ans: 81,
+      hint: "Find the side first: perimeter = 4 × side.", sol: "Side = 36 ÷ 4 = 9 cm. Area = 9² = 81 cm²." },
+    { id: "c05", cls: 8, topic: "Cubes and Cube Roots", q: "What is the cube root of 512?", ans: 8,
+      hint: "Try 8 × 8 × 8.", sol: "8 × 8 × 8 = 512, so ∛512 = 8." },
+    { id: "c06", cls: 8, topic: "Ratio", q: "The ratio of boys to girls in a class of 40 students is 3 : 2. How many boys are there?", ans: 24,
+      hint: "The total number of parts is 3 + 2 = 5.", sol: "Each part is 40 ÷ 5 = 8 students. Boys = 3 × 8 = 24." },
+    { id: "c07", cls: 9, topic: "Real Numbers", q: "What is the value of (2 + √3)(2 − √3)?", ans: 1,
+      hint: "Use (a + b)(a − b) = a² − b².", sol: "(2 + √3)(2 − √3) = 2² − (√3)² = 4 − 3 = 1." },
+    { id: "c08", cls: 9, topic: "Statistics", q: "The mean of 5 numbers is 12. What is their sum?", ans: 60,
+      hint: "Mean = sum ÷ number of values.", sol: "Sum = mean × number of values = 12 × 5 = 60." },
+    { id: "c09", cls: 9, topic: "Areas of Parallelograms and Triangles", q: "A triangle has a base of 10 cm and a height of 7 cm. What is its area in cm²?", ans: 35,
+      hint: "Area of a triangle = ½ × base × height.", sol: "Area = ½ × 10 × 7 = 35 cm²." },
+    { id: "c10", cls: 9, topic: "Quadrilaterals", q: "What is the perimeter of a rectangle with length 15 cm and breadth 8 cm, in cm?", ans: 46,
+      hint: "Perimeter = 2 × (length + breadth).", sol: "Perimeter = 2 × (15 + 8) = 46 cm." },
+    { id: "c11", cls: 9, topic: "Linear Equations in Two Variables", q: "If 2x + y = 10 and y = 4, what is x?", ans: 3,
+      hint: "Put y = 4 into the first equation.", sol: "2x + 4 = 10, so 2x = 6 and x = 3." },
+    { id: "c12", cls: 9, topic: "Surface Areas and Volumes", q: "What is the total surface area of a cube of side 5 cm, in cm²?", ans: 150,
+      hint: "A cube has 6 equal faces.", sol: "Total surface area = 6a² = 6 × 25 = 150 cm²." },
+    { id: "c13", cls: 10, topic: "Arithmetic Progressions", q: "Find the sum of the first 20 terms of the AP 2, 5, 8, ...", ans: 610,
+      hint: "Use Sₙ = n/2 × [2a + (n − 1)d].", sol: "a = 2, d = 3, n = 20. S₂₀ = 10 × (4 + 57) = 610." },
+    { id: "c14", cls: 10, topic: "Introduction to Trigonometry", q: "A tower is 30 m high. Standing 30 m from its base, the angle of elevation to the top is θ. What is tan θ?", ans: 1,
+      hint: "tan θ = opposite ÷ adjacent.", sol: "tan θ = 30 ÷ 30 = 1." },
+    { id: "c15", cls: 10, topic: "Areas Related to Circles", q: "What is the area of a circle with radius 14 cm, in cm²? (Take π = 22/7)", ans: 616,
+      hint: "Area = πr².", sol: "Area = 22/7 × 14 × 14 = 22 × 28 = 616 cm²." },
+    { id: "c16", cls: 10, topic: "Quadratic Equations", q: "For x² − 6x + k = 0 to have equal roots, what is k?", ans: 9,
+      hint: "Equal roots means the discriminant is 0.", sol: "D = (−6)² − 4k = 36 − 4k = 0, so k = 9." },
+    { id: "c17", cls: 10, topic: "Surface Areas and Volumes", q: "What is the volume of a cylinder with radius 7 cm and height 10 cm, in cm³? (Take π = 22/7)", ans: 1540,
+      hint: "Volume = πr²h.", sol: "V = 22/7 × 7 × 7 × 10 = 22 × 7 × 10 = 1540 cm³." },
+    { id: "c18", cls: 10, topic: "Coordinate Geometry", q: "What is the distance between the points (1, 2) and (4, 6)?", ans: 5,
+      hint: "Use the distance formula.", sol: "Distance = √((4 − 1)² + (6 − 2)²) = √(9 + 16) = 5." },
+    { id: "c19", cls: 11, topic: "Sequences and Series", q: "What is the 10th term of the GP 2, 4, 8, ...?", ans: 1024,
+      hint: "aₙ = a × rⁿ⁻¹, with r = 2.", sol: "a₁₀ = 2 × 2⁹ = 2 × 512 = 1024." },
+    { id: "c20", cls: 11, topic: "Permutations and Combinations", q: "In how many ways can 4 people sit in a row?", ans: 24,
+      hint: "Use n! for arranging n people.", sol: "4! = 4 × 3 × 2 × 1 = 24." },
+    { id: "c21", cls: 11, topic: "Permutations and Combinations", q: "What is the value of ⁶C₂?", ans: 15,
+      hint: "⁶C₂ = 6! ÷ (2! × 4!).", sol: "⁶C₂ = (6 × 5) ÷ (2 × 1) = 15." },
+    { id: "c22", cls: 11, topic: "Limits and Derivatives", q: "What is lim (x → 3) of (x² − 9) / (x − 3)?", ans: 6,
+      hint: "Factorise x² − 9.", sol: "(x² − 9)/(x − 3) = x + 3, which tends to 6 as x → 3." },
+    { id: "c23", cls: 11, topic: "Trigonometric Functions", q: "What is tan 45° + sin 90°?", ans: 2,
+      hint: "tan 45° = 1 and sin 90° = 1.", sol: "tan 45° + sin 90° = 1 + 1 = 2." },
+    { id: "c24", cls: 11, topic: "Sequences and Series", q: "An AP has first term 7 and common difference −2. What is its 5th term?", ans: -1,
+      hint: "a₅ = a + 4d.", sol: "a₅ = 7 + 4 × (−2) = 7 − 8 = −1." },
+    { id: "c25", cls: 12, topic: "Integrals", q: "What is the value of ∫ from 0 to 1 of 2x dx?", ans: 1,
+      hint: "The antiderivative of 2x is x².", sol: "[x²] from 0 to 1 = 1 − 0 = 1." },
+    { id: "c26", cls: 12, topic: "Matrices and Determinants", q: "What is the determinant of [[3, 1], [2, 4]]?", ans: 10,
+      hint: "For [[a, b], [c, d]], det = ad − bc.", sol: "det = 3 × 4 − 1 × 2 = 12 − 2 = 10." },
+    { id: "c27", cls: 12, topic: "Application of Derivatives", q: "If f(x) = x³ − 3x, what is f′(2)?", ans: 9,
+      hint: "First find f′(x) = 3x² − 3.", sol: "f′(x) = 3x² − 3, so f′(2) = 12 − 3 = 9." },
+    { id: "c28", cls: 12, topic: "Probability", q: "A fair die is rolled once. What is the probability of getting a number greater than 4? Give it as a fraction.", ans: 0.3333, show: "1/3",
+      hint: "The outcomes greater than 4 are 5 and 6.", sol: "2 favourable outcomes out of 6. P = 2/6 = 1/3." },
+    { id: "c29", cls: 12, topic: "Vector Algebra", q: "What is the dot product of (1, 2, 3) and (4, 5, 6)?", ans: 32,
+      hint: "Multiply matching components and add.", sol: "1×4 + 2×5 + 3×6 = 4 + 10 + 18 = 32." },
+    { id: "c30", cls: 11, topic: "Complex Numbers", q: "What is the modulus |z| of z = 6 + 8i?", ans: 10,
+      hint: "|a + ib| = √(a² + b²).", sol: "|z| = √(36 + 64) = √100 = 10." }
+  ],
+
+  missions: [
+    { id: "m01", title: "Algebra Warm-up", tasks: [
+      "Read the formula sheet for your class and say three formulas aloud",
+      "Solve 5 linear equations or identities in your notebook",
+      "Write one mistake you made this week and its correct method" ] },
+    { id: "m02", title: "Geometry Focus", tasks: [
+      "Draw a neat diagram for two theorems from your chapter",
+      "Solve 3 angle or triangle questions without looking at the answers",
+      "Explain one theorem aloud in your own words" ] },
+    { id: "m03", title: "Number Sense", tasks: [
+      "Practise 10 mental calculations with squares or percentages",
+      "Write 3 prime numbers and explain why each is prime",
+      "Check one homework answer by substituting it back into the question" ] },
+    { id: "m04", title: "Revision Sprint", tasks: [
+      "Set a 25-minute timer and revise one formula tab",
+      "Attempt today's Question of the Day before reading the answer",
+      "Write a 3-line summary of a lesson you watched this week" ] },
+    { id: "m05", title: "Exam Practice", tasks: [
+      "Solve 3 previous-year questions from your chapter",
+      "Mark your answers and note every error",
+      "Redo one wrong question correctly" ] },
+    { id: "m06", title: "Trigonometry Practice", tasks: [
+      "Write the trigonometric ratios of 30°, 45° and 60° from memory",
+      "Solve 2 height-and-distance problems",
+      "Check your values against the formula sheet" ] },
+    { id: "m07", title: "Calculus Practice", tasks: [
+      "Differentiate 3 functions using the power and product rules",
+      "Find one integral by reversing a derivative",
+      "Write the formula you used most today" ] },
+    { id: "m08", title: "Statistics Check", tasks: [
+      "Find the mean, median and mode of a set of 7 numbers",
+      "Make a frequency table from 10 values",
+      "Explain which average suits your data and why" ] },
+    { id: "m09", title: "Probability Practice", tasks: [
+      "List the sample space when two dice are rolled",
+      "Find the probability of 3 different events",
+      "Check that P(E) + P(not E) = 1 for two complementary events" ] },
+    { id: "m10", title: "Speed Maths", tasks: [
+      "Time yourself on 10 multiplication questions",
+      "Practise the squares of the numbers 11 to 20",
+      "Try to beat yesterday's time by 10%" ] },
+    { id: "m11", title: "Coordinate Geometry", tasks: [
+      "Plot 5 points on graph paper",
+      "Find the distance between two of those points",
+      "Find the mid-point and slope of one line segment" ] },
+    { id: "m12", title: "Mensuration Review", tasks: [
+      "Calculate the area of 3 different plane shapes",
+      "Find the volume of one solid of your choice",
+      "Write the units next to each answer" ] },
+    { id: "m13", title: "Word Problems", tasks: [
+      "Underline the given information in 2 word problems",
+      "Write an equation for each problem before solving it",
+      "Check that your answer makes sense in the context" ] },
+    { id: "m14", title: "Teach It Back", tasks: [
+      "Pick one formula from today's formula sheet",
+      "Explain how it is used in 2 minutes, out loud",
+      "Write the formula and one example on a small card" ] },
+    { id: "m15", title: "Clean Notes", tasks: [
+      "Rewrite one solved example neatly with a heading",
+      "Highlight the key step of that solution",
+      "Add one question of your own with its answer" ] }
+  ],
+
+  facts: [
+    { id: "f01", text: "Brahmagupta, an Indian mathematician, treated zero as a number in its own right in 628 CE, and set rules for working with it." },
+    { id: "f02", text: "Aryabhata, in the 5th century, gave π as 3.1416, correct to four decimal places." },
+    { id: "f03", text: "1729 is the smallest number that can be written as the sum of two cubes in two different ways: 1³ + 12³ = 9³ + 10³." },
+    { id: "f04", text: "The Pythagorean theorem has hundreds of different proofs." },
+    { id: "f05", text: "π is irrational, so its decimal expansion never ends and never repeats." },
+    { id: "f06", text: "A googol is the number 1 followed by 100 zeros." },
+    { id: "f07", text: "The sum of the first n odd numbers is always n². For example, 1 + 3 + 5 + 7 = 16 = 4²." },
+    { id: "f08", text: "The word 'algebra' comes from 'al-jabr', part of the title of a book by the Persian mathematician Al-Khwarizmi." },
+    { id: "f09", text: "The equals sign '=' was introduced by Robert Recorde in 1557, because he said two parallel lines are the most equal things." },
+    { id: "f10", text: "In a room of just 23 people, the chance that two of them share a birthday is more than 50%." },
+    { id: "f11", text: "On a curved surface such as a sphere, the angles of a triangle can add up to more than 180°." },
+    { id: "f12", text: "The ratio of consecutive Fibonacci numbers gets closer and closer to the golden ratio, about 1.618." },
+    { id: "f13", text: "A Möbius strip has only one side and only one edge." },
+    { id: "f14", text: "Lilavati, a famous arithmetic book, was written by the 12th-century Indian mathematician Bhaskara II." },
+    { id: "f15", text: "A regular hexagon can tile a flat plane with no gaps, which is why honeycomb cells are hexagons." },
+    { id: "f16", text: "Every number divisible by 9 has digits that add up to a multiple of 9. For example, 2 + 5 + 2 = 9." },
+    { id: "f17", text: "A polygon with n sides has interior angles that add up to (n − 2) × 180°. A hexagon's angles add up to 720°." },
+    { id: "f18", text: "Pingala described a version of Pascal's triangle in India around 200 BCE, nearly 1,850 years before Pascal." },
+    { id: "f19", text: "The number of possible chess games is so large that it is estimated to be more than the number of atoms in the observable universe." },
+    { id: "f20", text: "A cube has 8 vertices, 12 edges and 6 faces." },
+    { id: "f21", text: "Cantor proved that some infinities are bigger than others: the real numbers are a larger infinity than the counting numbers." },
+    { id: "f22", text: "Madhava of Sangamagrama, in Kerala in the 14th century, found infinite series for sine, cosine and π, long before they appeared in Europe." },
+    { id: "f23", text: "The number e, about 2.718, is the base of natural logarithms and appears wherever growth is continuous." },
+    { id: "f24", text: "If you multiply any number by 11 and the number has two digits that add up to less than 10, you can place their sum in the middle. For 32 × 11, 3 + 2 = 5, so the answer is 352." }
+  ],
+
+  schedule: []
+};
+
+
+  const $ = id => document.getElementById(id);
+
+  // Small helper to create elements
+  function mk(tag, text, cls) {
+    const n = document.createElement(tag);
+    if (text !== undefined) n.textContent = text;
+    if (cls) n.className = cls;
+    return n;
+  }
+
+  // ---------- Clock (Indian Standard Time, UTC+5:30) ----------
+  const tickWrap = document.createElement("div");
+  tickWrap.className = "tick-wrap";
+  for (let i = 0; i < 12; i++) {
+    const w = document.createElement("div");
+    w.style.cssText = `position:absolute;inset:0;transform:rotate(${i * 30}deg)`;
+    const mark = document.createElement("div");
+    mark.className = "tick-mark";
+    w.appendChild(mark);
+    tickWrap.appendChild(w);
+  }
+  $("analogFace").prepend(tickWrap);
+
+  function updateClock() {
+    const now = new Date();
+    $("dateText").textContent = now.toLocaleDateString("en-IN", {
+      timeZone: "Asia/Kolkata", weekday: "long", day: "numeric", month: "long", year: "numeric"
+    });
+    $("digitalTime").textContent = now.toLocaleTimeString("en-IN", {
+      timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true
+    });
+    // Shift the clock to IST, then read its hours, minutes and seconds in UTC terms
+    const ist = new Date(now.getTime() + 330 * 60000);
+    const s = ist.getUTCSeconds();
+    const m = ist.getUTCMinutes();
+    const h = ist.getUTCHours() % 12;
+    $("sHand").style.transform = `rotate(${s * 6}deg)`;
+    $("mHand").style.transform = `rotate(${m * 6 + s * 0.1}deg)`;
+    $("hHand").style.transform = `rotate(${h * 30 + m * 0.5}deg)`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // ---------- Quote: a different one on each page load ----------
+  const QUOTES = [
+    { t: "Mathematics is not about numbers, equations, computations, or algorithms: it is about understanding.", a: "William Paul Thurston" },
+    { t: "If I have seen further, it is by standing on the shoulders of giants.", a: "Isaac Newton" },
+    { t: "The more that you read, the more things you will know. The more that you learn, the more places you'll go.", a: "Dr. Seuss" },
+    { t: "Education is the most powerful weapon which you can use to change the world.", a: "Nelson Mandela" },
+    { t: "The beautiful thing about learning is that nobody can take it away from you.", a: "B.B. King" },
+    { t: "An investment in knowledge pays the best interest.", a: "Benjamin Franklin" },
+    { t: "The important thing is not to stop questioning.", a: "Albert Einstein" }
+  ];
+  const picked = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  $("quoteText").textContent = "“" + picked.t + "”";
+  $("quoteAuthor").textContent = "— " + picked.a;
+
+  // Teacher photo: shows initials if the photo is missing
+  $("teacherPhoto").addEventListener("error", () => {
+    $("teacherPhoto").style.display = "none";
+    $("photoFallback").style.display = "flex";
+  });
+
+  // ---------- Formula data: all topics, Classes 8 to 12 ----------
+  const CHAPTERS = { "8": SYL_8, "9": SYL_9, "10": SYL_10, "11": SYL_11, "12": SYL_12 };
+  // Classes 9 and 10 get one combined "Mensuration" topic at the top, made from their measurement chapters
+  const MENSURATION_PARTS = {
+    "9": ["Areas of Parallelograms and Triangles", "Heron's Formula", "Surface Areas and Volumes"],
+    "10": ["Areas Related to Circles", "Surface Areas and Volumes"]
+  };
+  const SYLLABUS = {};
+  Object.keys(CHAPTERS).forEach(c => {
+    const parts = MENSURATION_PARTS[c] || [];
+    const combined = CHAPTERS[c].filter(tp => parts.includes(tp.topic)).flatMap(tp => tp.items);
+    SYLLABUS[c] = (combined.length ? [{ topic: "Mensuration", items: combined }] : []).concat(CHAPTERS[c]);
+  });
+  const CLASS_COLORS = { "8": "#10b981", "9": "#3b82f6", "10": "#8b5cf6", "11": "#f97316", "12": "#ef4444" };
+
+  // Flat list of every formula, used by the Daily Corner
+  const ALL_FORMULAS = [];
+  Object.keys(CHAPTERS).forEach(c => {
+    CHAPTERS[c].forEach(tp => {
+      tp.items.forEach(it => ALL_FORMULAS.push({ c, topic: tp.topic, t: it[0], f: it[1], n: it[2] || "" }));
+    });
+  });
+
+  // ---------- Tips and tricks ----------
+  const TIPS = [
+    "Practise two examples right after learning a formula, without looking at the book.",
+    "Check your answer by putting a simple number into the original question and seeing if both sides match.",
+    "To square a number that ends in 5, multiply the tens digit by the next whole number, then write 25 after it. For example, 35² = 3 × 4 = 12, so 35² = 1225.",
+    "To multiply a two-digit number by 11, add its two digits and place the sum between them. For example, 32 × 11 = 352, because 3 + 2 = 5. This works when the digits add to less than 10.",
+    "To multiply by 5, multiply by 10 and then halve the result. For example, 36 × 5 = 360 ÷ 2 = 180.",
+    "A number is divisible by 3 if the sum of its digits is divisible by 3. The same check works for 9, with the digit sum divisible by 9.",
+    "A number is divisible by 4 if its last two digits form a number divisible by 4.",
+    "A perfect square never ends in 2, 3, 7 or 8. If your answer ends in one of these, check your working.",
+    "To find 10% of a number, move the decimal point one place to the left. For 15%, add half of that to 10%.",
+    "Convert percentages to fractions to calculate faster. Since 25% is 1/4, 25% of 200 is 50.",
+    "Before solving a word problem, write down what is given and what you need to find.",
+    "Keep an error notebook. Write each mistake and its correct method, then try the same question again a few days later.",
+    "Use the Pomodoro method: 25 minutes of focused study, then a 5-minute break.",
+    "Use active recall: close the book, write down everything you remember from the chapter, then check what you missed.",
+    "Draw a neat figure for every geometry question. A clear diagram often shows the method before you write a single step.",
+    "Write units with answers to word problems, such as cm, m² or rupees.",
+    "In an exam, skim the whole paper for two minutes first, then start with the questions you know best.",
+    "When you are stuck, try the same type of problem with smaller numbers. The pattern often becomes clear.",
+    "Make a one-page formula sheet for each chapter and read it for ten minutes before going to sleep.",
+    "Teach the topic to a friend or to an empty room. If you can explain it simply, you understand it.",
+    "When multiplying, two negatives make a positive, and a positive with a negative makes a negative.",
+    "Write negative numbers in brackets when squaring. (−3)² = 9, while −3² = −9.",
+    "For a quadratic equation, try factorising first. If it does not factorise easily, use the quadratic formula.",
+    "Learn the trigonometric values for 0°, 30°, 45°, 60° and 90° in a small table. Most standard questions use them.",
+    "Before using a formula, check its conditions. For example, the sum formula for a GP needs r ≠ 1.",
+    "Always write + C when finding an indefinite integral, because the constant can be any number."
+  ];
+
+  // ---------- Motivation articles ----------
+  const ARTICLES = [
+    { title: "Mistakes are part of learning",
+      body: "Every maths teacher has made mistakes on the board. A wrong answer shows you exactly where your understanding needs work. Treat each mistake as information, not as proof that you are bad at maths. Correct it, understand why it happened, and move on. Students who learn from mistakes improve faster than those who avoid hard questions." },
+    { title: "Small steps, every day",
+      body: "You do not need to study for eight hours to make progress. Thirty focused minutes a day, kept up for a month, will teach you more than one long session before an exam. Pick one small goal each day, such as finishing three questions or revising one formula. Small wins build momentum, and momentum carries you through the harder days." },
+    { title: "Why maths feels hard at first",
+      body: "Maths builds on itself. If one topic feels confusing, it is often because an earlier topic is not yet clear. Feeling confused is a normal part of learning something new, not a sign that you lack ability. Go back, rebuild the basics and practise slowly. Clarity usually comes after the confusion, not before it." },
+    { title: "Compare with yesterday, not with others",
+      body: "It is easy to look at a classmate who solves problems quickly and feel behind. But everyone learns at a different speed. The only comparison that really matters is between who you were last month and who you are today. If you can solve a question today that you could not solve last week, you are moving forward." },
+    { title: "Rest is part of good study",
+      body: "Your brain stores much of what you learn while you sleep, so rest is not wasted time. Take short breaks while studying, get enough sleep, and avoid studying late at night when you are too tired to think clearly. A rested mind solves problems more calmly and remembers more of what it studies." },
+    { title: "Asking questions takes courage",
+      body: "Many students stay quiet in class because they are afraid of looking foolish. In reality, the question you hesitate to ask is often one that others are also wondering about. A teacher would rather answer a question than see a student stuck in silence. Ask in class, ask online or ask a friend. Every question makes you a stronger learner." },
+    { title: "Consistency beats intensity",
+      body: "A student who studies for one hour every day for a year will know far more than someone who studies ten hours before one exam and forgets everything a week later. Consistency lets your memory build slowly and steadily. Set a time for study, keep to it, and let the habit do the work on the days when motivation is low." }
+  ];
+
+    // ================= Daily Learning Hub =================
+  // Admin passcode. Change it before you publish. It is a convenience lock only (see the note in the admin panel).
+  const ADMIN_PASSCODE = "change-me-now";
+  const HUB_KEY = "mbf-hub-progress-v1";
+  const DRAFT_KEY = "mbf-hub-draft-v1";
+  const POINTS = { qAttempt: 5, qCorrect: 10, cAttempt: 5, cCorrect: 15, task: 5, missionBonus: 10 };
+  const TYPE_TO_LIST = { question: "questions", challenge: "challenges", mission: "missions", fact: "facts" };
+  const LIST_TO_TYPE = { questions: "question", challenges: "challenge", missions: "mission", facts: "fact" };
+  const ID_PREFIX = { questions: "q", challenges: "c", missions: "m", facts: "f" };
+
+  let pub = clone(HUB_BANK);           // the content students see
+  let progress = loadProgress();       // this student's points, streak and answers
+  let curQ = null, curC = null, curM = null, curF = null;
+  let qSel = null;
+  let lastKey = todayKey();
+  let adminDraft = null;               // the admin's working copy
+  let adminTab = "questions";
+  let adminUnlocked = false;
+
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function storeGet(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
+  function storeSet(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* storage blocked: work in memory */ } }
+
+  function loadProgress() {
+    const p = storeGet(HUB_KEY) || {};
+    return Object.assign({ points: 0, streak: 0, last: "", days: {}, bookmarks: [], cls: "all" }, p);
+  }
+  function saveProgress() { storeSet(HUB_KEY, progress); }
+
+  // ---------- Dates (Indian Standard Time) ----------
+  function todayKey() { return new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10); }
+  function addDays(key, n) { const d = new Date(key + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  function dayNumber(key) { return Math.round(Date.UTC(+key.slice(0, 4), +key.slice(5, 7) - 1, +key.slice(8, 10)) / 86400000); }
+  function displayDate(key) {
+    return new Date(key + "T00:00:00Z").toLocaleDateString("en-IN", { timeZone: "UTC", weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }
+
+  // ---------- Daily selection: a fixed shuffle per type, walked one step per day ----------
+  function hash32(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function seededOrder(ids, seed) {
+    const arr = ids.slice().sort();
+    let a = hash32(seed);
+    const rnd = () => {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; }
+    return arr;
+  }
+  function pickFor(type, key, cls) {
+    const items = pub[TYPE_TO_LIST[type]] || [];
+    const schedule = pub.schedule || [];
+    const sched = schedule.find(s => s.date === key && s.type === type);
+    if (sched) { const hit = items.find(i => i.id === sched.id); if (hit) return hit; }
+    const taken = new Set(schedule.filter(s => s.type === type).map(s => s.id));
+    const free = items.filter(i => !taken.has(i.id));
+    if (!free.length) return null;
+    let pool = free, seed = type + "|all";
+    if (cls && cls !== "all" && (type === "question" || type === "challenge")) {
+      const byClass = free.filter(i => String(i.cls) === String(cls));
+      if (byClass.length) { pool = byClass; seed = type + "|" + cls; }
+    }
+    const order = seededOrder(pool.map(i => i.id), seed);
+    const idx = ((dayNumber(key) % order.length) + order.length) % order.length;
+    return pool.find(i => i.id === order[idx]);
+  }
+
+  // ---------- Progress helpers ----------
+  function dayRec(key) {
+    if (!progress.days[key]) progress.days[key] = { a: {}, m: null };
+    return progress.days[key];
+  }
+  function pruneDays(key) {
+    Object.keys(progress.days).forEach(d => { if (dayNumber(key) - dayNumber(d) > 120) delete progress.days[d]; });
+  }
+  function addPoints(n) { progress.points = Math.max(0, progress.points + n); }
+  function touchStreak(key) {
+    if (progress.last === key) return;
+    progress.streak = progress.last === addDays(key, -1) ? progress.streak + 1 : 1;
+    progress.last = key;
+  }
+  function currentStreak(key) {
+    return (progress.last === key || progress.last === addDays(key, -1)) ? progress.streak : 0;
+  }
+  function todaysStatus(key) {
+    const rec = dayRec(key);
+    const q = pickFor("question", key, progress.cls);
+    const c = pickFor("challenge", key, progress.cls);
+    const m = pickFor("mission", key, "all");
+    const qDone = !!(q && rec.a[q.id]);
+    const cDone = !!(c && rec.a[c.id]);
+    const mDone = !!(m && rec.m && rec.m.id === m.id && rec.m.done.every(Boolean));
+    return { count: [qDone, cDone, mDone].filter(Boolean).length };
+  }
+  function pop(node) { node.classList.remove("pop"); void node.offsetWidth; node.classList.add("pop"); }
+  function parseAnswer(s) {
+    const t = String(s).replace(/−/g, "-").replace(/\s+/g, "");
+    const frac = /^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/.exec(t);
+    if (frac) { const d = Number(frac[2]); return d === 0 ? NaN : Number(frac[1]) / d; }
+    if (/^-?\d+(\.\d+)?$/.test(t)) return Number(t);
+    return NaN;
+  }
+
+  // ---------- Rendering: top bar ----------
+  function renderTop(key) {
+    $("hubDate").textContent = displayDate(key);
+    $("hubPoints").textContent = progress.points;
+    const streak = currentStreak(key);
+    $("hubStreak").textContent = streak;
+    $("statStreak").classList.toggle("on", streak > 0);
+    $("hubToday").textContent = todaysStatus(key).count + "/3";
+  }
+  function renderClassButtons() {
+    document.querySelectorAll(".cf-btn").forEach(b => b.classList.toggle("active", b.dataset.c === progress.cls));
+  }
+
+  // ---------- Question of the Day ----------
+  function renderQuestion(key) {
+    curQ = pickFor("question", key, progress.cls);
+    qSel = null;
+    const box = $("qOpts");
+    box.innerHTML = "";
+    const fb = $("qFeedback"); fb.hidden = true; fb.innerHTML = "";
+    if (!curQ) {
+      $("qTopic").textContent = "";
+      $("qText").textContent = "No question has been scheduled yet. Please check back soon.";
+      $("qSubmit").hidden = true;
+      return;
+    }
+    $("qSubmit").hidden = false;
+    $("qSubmit").disabled = true;
+    $("qTopic").textContent = "Class " + curQ.cls + " · " + curQ.topic;
+    $("qText").textContent = curQ.q;
+    curQ.options.forEach((opt, i) => {
+      const b = mk("button", opt, "opt");
+      b.type = "button";
+      b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", () => {
+        qSel = i;
+        box.querySelectorAll(".opt").forEach((x, j) => x.setAttribute("aria-pressed", String(j === i)));
+        $("qSubmit").disabled = false;
+      });
+      box.appendChild(b);
+    });
+    const rec = dayRec(key).a[curQ.id];
+    if (rec && rec.kind === "q") showQuestionResult(rec);
+  }
+  function showQuestionResult(rec) {
+    $("qOpts").querySelectorAll(".opt").forEach((b, i) => {
+      b.disabled = true;
+      b.setAttribute("aria-pressed", String(i === rec.chosen));
+      if (i === curQ.ans) b.classList.add("correct");
+      else if (i === rec.chosen) b.classList.add("wrong");
+    });
+    $("qSubmit").hidden = true;
+    const fb = $("qFeedback");
+    fb.hidden = false;
+    fb.className = "feedback " + (rec.correct ? "ok" : "bad");
+    fb.innerHTML = "";
+    fb.append(
+      mk("strong", rec.correct ? "Correct! Well done." : "Not quite this time."),
+      mk("p", "Correct answer: " + curQ.options[curQ.ans] + "."),
+      mk("p", "Explanation: " + curQ.exp),
+      mk("p", "Points earned: " + rec.pts + ".")
+    );
+  }
+  $("qSubmit").addEventListener("click", () => {
+    if (!curQ || qSel === null) return;
+    const key = todayKey();
+    const rec = dayRec(key);
+    if (rec.a[curQ.id]) return;
+    const correct = qSel === curQ.ans;
+    const pts = POINTS.qAttempt + (correct ? POINTS.qCorrect : 0);
+    rec.a[curQ.id] = { kind: "q", chosen: qSel, correct, pts };
+    addPoints(pts);
+    touchStreak(key);
+    saveProgress();
+    showQuestionResult(rec.a[curQ.id]);
+    pop($("statPoints"));
+    renderTop(key);
+  });
+
+  // ---------- Maths Challenge of the Day ----------
+  function renderChallenge(key) {
+    curC = pickFor("challenge", key, progress.cls);
+    const input = $("cInput");
+    const hint = $("cHint");
+    const fb = $("cFeedback");
+    hint.hidden = true; fb.hidden = true; fb.innerHTML = "";
+    $("cHintBtn").textContent = "Show hint";
+    input.value = ""; input.disabled = false;
+    $("cSubmit").hidden = false; $("cHintBtn").hidden = false;
+    if (!curC) {
+      $("cTopic").textContent = "";
+      $("cText").textContent = "No challenge has been scheduled yet. Please check back soon.";
+      input.disabled = true; $("cSubmit").hidden = true; $("cHintBtn").hidden = true;
+      return;
+    }
+    $("cTopic").textContent = "Class " + curC.cls + " · " + curC.topic;
+    $("cText").textContent = curC.q;
+    hint.textContent = "Hint: " + (curC.hint || "No hint for this one. Try working it out step by step.");
+    const rec = dayRec(key).a[curC.id];
+    if (rec && rec.kind === "c") { input.value = rec.value; showChallengeResult(rec); }
+  }
+  function showChallengeResult(rec) {
+    $("cInput").disabled = true;
+    $("cSubmit").hidden = true;
+    $("cHintBtn").hidden = true;
+    $("cHint").hidden = true;
+    const fb = $("cFeedback");
+    fb.hidden = false;
+    fb.className = "feedback " + (rec.correct ? "ok" : "bad");
+    fb.innerHTML = "";
+    fb.append(
+      mk("strong", rec.correct ? "Correct! Well done." : "Not this time."),
+      mk("p", "Correct answer: " + (curC.show || curC.ans) + "."),
+      mk("p", "Solution: " + curC.sol),
+      mk("p", "Points earned: " + rec.pts + ".")
+    );
+  }
+  $("cHintBtn").addEventListener("click", () => {
+    const h = $("cHint");
+    h.hidden = !h.hidden;
+    $("cHintBtn").textContent = h.hidden ? "Show hint" : "Hide hint";
+  });
+  function submitChallenge() {
+    if (!curC) return;
+    const key = todayKey();
+    const rec = dayRec(key);
+    if (rec.a[curC.id]) return;
+    const raw = $("cInput").value;
+    const v = parseAnswer(raw);
+    const fb = $("cFeedback");
+    if (Number.isNaN(v)) {
+      fb.hidden = false; fb.className = "feedback info";
+      fb.textContent = "Please type a number, for example 12, -3 or 3/4.";
+      return;
+    }
+    const correct = Math.abs(v - curC.ans) < 0.001;
+    const pts = POINTS.cAttempt + (correct ? POINTS.cCorrect : 0);
+    rec.a[curC.id] = { kind: "c", value: raw.trim(), correct, pts };
+    addPoints(pts);
+    touchStreak(key);
+    saveProgress();
+    showChallengeResult(rec.a[curC.id]);
+    pop($("statPoints"));
+    renderTop(key);
+  }
+  $("cSubmit").addEventListener("click", submitChallenge);
+  $("cInput").addEventListener("keydown", e => { if (e.key === "Enter") submitChallenge(); });
+
+  // ---------- Daily Study Mission ----------
+  function renderMission(key) {
+    curM = pickFor("mission", key, "all");
+    const list = $("mTasks");
+    list.innerHTML = "";
+    if (!curM) {
+      $("mTitle").textContent = "";
+      $("mNote").textContent = "No mission has been scheduled yet.";
+      return;
+    }
+    $("mTitle").textContent = curM.title;
+    const rec = dayRec(key);
+    if (!rec.m || rec.m.id !== curM.id) {
+      if (rec.m) addPoints(-rec.m.awarded);
+      rec.m = { id: curM.id, done: curM.tasks.map(() => false), awarded: 0 };
+    }
+    curM.tasks.forEach((text, i) => {
+      const li = document.createElement("li");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "task";
+      b.setAttribute("aria-pressed", String(rec.m.done[i]));
+      b.innerHTML = '<span class="box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>';
+      b.appendChild(mk("span", text));
+      b.addEventListener("click", () => toggleTask(i));
+      li.appendChild(b);
+      list.appendChild(li);
+    });
+    const count = rec.m.done.filter(Boolean).length;
+    $("mNote").textContent = count === curM.tasks.length
+      ? "Mission complete! The " + POINTS.missionBonus + "-point bonus has been added."
+      : count + " of " + curM.tasks.length + " done. Each task is worth " + POINTS.task + " points. Finish all of them for a " + POINTS.missionBonus + "-point bonus.";
+  }
+  function toggleTask(i) {
+    if (!curM) return;
+    const key = todayKey();
+    const rec = dayRec(key);
+    if (!rec.m || rec.m.id !== curM.id) return;
+    rec.m.done[i] = !rec.m.done[i];
+    const count = rec.m.done.filter(Boolean).length;
+    const want = count * POINTS.task + (count === curM.tasks.length ? POINTS.missionBonus : 0);
+    addPoints(want - rec.m.awarded);
+    rec.m.awarded = want;
+    if (rec.m.done[i]) touchStreak(key);
+    saveProgress();
+    renderMission(key);
+    pop($("statPoints"));
+    renderTop(key);
+  }
+
+  // ---------- Interesting Maths Fact (bookmarkable) ----------
+  function renderFact() {
+    curF = pickFor("fact", todayKey(), "all");
+    if (!curF) { $("factText").textContent = "No fact has been scheduled yet."; $("bmBtn").hidden = true; return; }
+    $("bmBtn").hidden = false;
+    $("factText").textContent = curF.text;
+    setBookmarkButton();
+  }
+  function setBookmarkButton() {
+    const on = !!curF && progress.bookmarks.indexOf(curF.id) !== -1;
+    $("bmBtn").setAttribute("aria-pressed", String(on));
+    $("bmLabel").textContent = on ? "Saved" : "Save";
+  }
+  $("bmBtn").addEventListener("click", () => {
+    if (!curF) return;
+    const i = progress.bookmarks.indexOf(curF.id);
+    if (i === -1) progress.bookmarks.push(curF.id); else progress.bookmarks.splice(i, 1);
+    saveProgress();
+    setBookmarkButton();
+    renderSaved();
+  });
+  function renderSaved() {
+    const ul = $("savedList");
+    ul.innerHTML = "";
+    const facts = progress.bookmarks.map(id => (pub.facts || []).find(f => f.id === id)).filter(Boolean);
+    $("savedCount").textContent = facts.length;
+    if (!facts.length) { ul.appendChild(mk("li", "No saved facts yet. Tap Save on a fact to keep it here.")); return; }
+    facts.forEach(f => {
+      const li = mk("li");
+      const btn = mk("button", "Remove", "small-btn danger");
+      btn.type = "button";
+      btn.addEventListener("click", () => {
+        progress.bookmarks = progress.bookmarks.filter(x => x !== f.id);
+        saveProgress(); setBookmarkButton(); renderSaved();
+      });
+      li.append(mk("span", f.text), btn);
+      ul.appendChild(li);
+    });
+  }
+
+  // ---------- Render everything ----------
+  function renderAll() {
+    const key = todayKey();
+    lastKey = key;
+    pruneDays(key);
+    renderClassButtons();
+    renderTop(key);
+    renderQuestion(key);
+    renderChallenge(key);
+    renderMission(key);
+    renderFact();
+    renderSaved();
+  }
+  document.querySelectorAll(".cf-btn").forEach(b => {
+    b.addEventListener("click", () => { progress.cls = b.dataset.c; saveProgress(); renderAll(); });
+  });
+
+  // ---------- Published content (daily-content.json next to index.html, if uploaded) ----------
+  function isBank(j) {
+    return !!j && Array.isArray(j.questions) && Array.isArray(j.challenges) && Array.isArray(j.missions) && Array.isArray(j.facts)
+      && (j.schedule === undefined || Array.isArray(j.schedule));
+  }
+  async function loadPublished() {
+    try {
+      const r = await fetch("daily-content.json", { cache: "no-store" });
+      if (!r.ok) return;
+      const j = await r.json();
+      if (!isBank(j)) return;
+      pub = { questions: j.questions, challenges: j.challenges, missions: j.missions, facts: j.facts, schedule: j.schedule || [] };
+      renderAll();
+    } catch (e) { /* no published file: keep the built-in content */ }
+  }
+
+  // ================= Admin panel (#admin) =================
+  const FIELDS = {
+    questions: [
+      { k: "cls", label: "Class", type: "select", opts: ["8", "9", "10", "11", "12"], def: "8" },
+      { k: "topic", label: "Topic", type: "text" },
+      { k: "q", label: "Question", type: "textarea" },
+      { k: "options", label: "Four options (one per line)", type: "lines" },
+      { k: "ans", label: "Correct option number (1 to 4)", type: "num", def: "1" },
+      { k: "exp", label: "Explanation shown after the student answers", type: "textarea" }
+    ],
+    challenges: [
+      { k: "cls", label: "Class", type: "select", opts: ["8", "9", "10", "11", "12"], def: "8" },
+      { k: "topic", label: "Topic", type: "text" },
+      { k: "q", label: "Challenge question", type: "textarea" },
+      { k: "ans", label: "Correct answer (a number, e.g. 12, -3, 0.5 or 3/4)", type: "text" },
+      { k: "show", label: "How to display the answer (optional, e.g. 1/3)", type: "text" },
+      { k: "hint", label: "Hint (optional)", type: "text" },
+      { k: "sol", label: "Solution shown after the student answers", type: "textarea" }
+    ],
+    missions: [
+      { k: "title", label: "Mission title", type: "text" },
+      { k: "tasks", label: "Three tasks (one per line)", type: "lines" }
+    ],
+    facts: [
+      { k: "text", label: "Fact", type: "textarea" }
+    ]
+  };
+
+  function short(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + "…" : s; }
+  function itemLabel(list, it) {
+    if (list === "questions") return "Class " + it.cls + " · " + it.topic + " — " + short(it.q, 140);
+    if (list === "challenges") return "Class " + it.cls + " · " + it.topic + " — " + short(it.q, 120) + " (answer " + (it.show || it.ans) + ")";
+    if (list === "missions") return it.title + " — " + it.tasks.length + " tasks";
+    return short(it.text, 160);
+  }
+
+  function loadDraft() {
+    const d = storeGet(DRAFT_KEY);
+    adminDraft = isBank(d) ? d : clone(pub);
+    if (!adminDraft.schedule) adminDraft.schedule = [];
+  }
+  function saveDraft() { storeSet(DRAFT_KEY, adminDraft); }
+
+  function showView() {
+    const onAdmin = location.hash === "#admin";
+    document.body.classList.toggle("admin-mode", onAdmin);
+    $("adminView").hidden = !onAdmin;
+    if (onAdmin) {
+      $("adminLogin").hidden = adminUnlocked;
+      $("adminPanel").hidden = !adminUnlocked;
+      if (adminUnlocked) { if (!adminDraft) loadDraft(); renderAdminTabs(); renderAdminTab(); }
+    }
+    window.scrollTo(0, 0);
+  }
+  function tryUnlock() {
+    if ($("adminPass").value === ADMIN_PASSCODE) {
+      adminUnlocked = true;
+      $("adminErr").hidden = true;
+      $("adminPass").value = "";
+      showView();
+    } else {
+      $("adminErr").hidden = false;
+    }
+  }
+  $("adminEnter").addEventListener("click", tryUnlock);
+  $("adminPass").addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
+  $("adminExit").addEventListener("click", e => {
+    e.preventDefault();
+    history.replaceState(null, "", location.pathname + location.search);
+    showView();
+  });
+  document.querySelectorAll("#adminTabs button").forEach(b => {
+    b.addEventListener("click", () => { adminTab = b.dataset.tab; renderAdminTabs(); renderAdminTab(); });
+  });
+  function renderAdminTabs() {
+    document.querySelectorAll("#adminTabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === adminTab));
+  }
+  function renderAdminTab() {
+    const body = $("adminBody");
+    body.innerHTML = "";
+    if (adminTab === "schedule") return renderSchedule(body);
+    if (adminTab === "publish") return renderPublish(body);
+    renderList(body, adminTab);
+  }
+
+  function renderList(body, list) {
+    const top = mk("div", undefined, "admin-actions");
+    const add = mk("button", "Add new", "btn-main");
+    add.type = "button";
+    add.addEventListener("click", () => showForm(body, list, null));
+    top.appendChild(add);
+    body.appendChild(top);
+    const items = adminDraft[list];
+    if (!items.length) body.appendChild(mk("p", "Nothing here yet. Use Add new to start."));
+    items.forEach(it => {
+      const row = mk("div", undefined, "row-item");
+      const text = mk("div");
+      text.appendChild(mk("p", itemLabel(list, it)));
+      text.appendChild(mk("small", "ID " + it.id));
+      const acts = mk("div", undefined, "row-actions");
+      const edit = mk("button", "Edit", "small-btn primary"); edit.type = "button";
+      edit.addEventListener("click", () => showForm(body, list, it));
+      const del = mk("button", "Delete", "small-btn danger"); del.type = "button";
+      del.addEventListener("click", () => removeItem(list, it.id));
+      acts.append(edit, del);
+      row.append(text, acts);
+      body.appendChild(row);
+    });
+  }
+  function removeItem(list, id) {
+    if (!confirm("Delete this item? It is removed from the editor, not from students' browsers until you publish.")) return;
+    adminDraft[list] = adminDraft[list].filter(x => x.id !== id);
+    const type = LIST_TO_TYPE[list];
+    adminDraft.schedule = adminDraft.schedule.filter(s => !(s.type === type && s.id === id));
+    saveDraft();
+    renderAdminTab();
+  }
+
+  function showForm(body, list, item) {
+    body.innerHTML = "";
+    const box = mk("div", undefined, "admin-form");
+    box.appendChild(mk("h3", item ? "Edit item" : "New item"));
+    const inputs = {};
+    FIELDS[list].forEach(f => {
+      const lab = mk("label", f.label);
+      lab.htmlFor = "f_" + f.k;
+      let input;
+      if (f.type === "select") {
+        input = mk("select");
+        f.opts.forEach(o => { const op = mk("option", o); op.value = o; input.appendChild(op); });
+      } else if (f.type === "textarea" || f.type === "lines") {
+        input = mk("textarea");
+      } else {
+        input = mk("input");
+        if (f.type === "num") input.type = "number";
+      }
+      input.id = "f_" + f.k;
+      let val = f.def !== undefined ? f.def : "";
+      if (item) {
+        val = item[f.k];
+        if (f.type === "lines") val = (item[f.k] || []).join("\n");
+        if (f.k === "ans" && list === "questions") val = item.ans + 1;
+        if (val === undefined || val === null) val = "";
+      }
+      input.value = String(val);
+      inputs[f.k] = input;
+      box.append(lab, input);
+    });
+    const err = mk("p", "", "admin-err");
+    err.hidden = true;
+    const acts = mk("div", undefined, "admin-actions");
+    const save = mk("button", "Save", "btn-main"); save.type = "button";
+    const cancel = mk("button", "Cancel", "small-btn"); cancel.type = "button";
+    save.addEventListener("click", () => {
+      const res = readForm(list, inputs);
+      if (res.error) { err.textContent = res.error; err.hidden = false; return; }
+      if (item) {
+        Object.assign(item, res.data);
+      } else {
+        res.data.id = ID_PREFIX[list] + Date.now().toString(36);
+        adminDraft[list].push(res.data);
+      }
+      saveDraft();
+      renderAdminTab();
+    });
+    cancel.addEventListener("click", () => renderAdminTab());
+    acts.append(save, cancel);
+    box.append(err, acts);
+    body.appendChild(box);
+  }
+
+  function readForm(list, inp) {
+    const v = k => inp[k].value.trim();
+    const lines = k => v(k).split("\n").map(s => s.trim()).filter(Boolean);
+    if (list === "questions") {
+      const opts = lines("options");
+      const ans = Number(v("ans"));
+      if (!v("topic")) return { error: "Please enter the topic." };
+      if (!v("q")) return { error: "Please write the question." };
+      if (opts.length !== 4) return { error: "Please enter exactly four options, one per line." };
+      if (!Number.isInteger(ans) || ans < 1 || ans > 4) return { error: "The correct option number must be 1, 2, 3 or 4." };
+      return { data: { cls: Number(v("cls")), topic: v("topic"), q: v("q"), options: opts, ans: ans - 1, exp: v("exp") } };
+    }
+    if (list === "challenges") {
+      const ans = parseAnswer(v("ans"));
+      if (!v("topic")) return { error: "Please enter the topic." };
+      if (!v("q")) return { error: "Please write the challenge question." };
+      if (!Number.isFinite(ans)) return { error: "The correct answer must be a number, for example 12, -3, 0.5 or 3/4." };
+      const data = { cls: Number(v("cls")), topic: v("topic"), q: v("q"), ans, hint: v("hint"), sol: v("sol") };
+      if (v("show")) data.show = v("show");
+      return { data };
+    }
+    if (list === "missions") {
+      const tasks = lines("tasks");
+      if (!v("title")) return { error: "Please enter a mission title." };
+      if (tasks.length !== 3) return { error: "Please enter exactly three tasks, one per line." };
+      return { data: { title: v("title"), tasks } };
+    }
+    if (!v("text")) return { error: "Please write the fact." };
+    return { data: { text: v("text") } };
+  }
+
+  function renderSchedule(body) {
+    const box = mk("div", undefined, "admin-form");
+    box.appendChild(mk("h3", "Schedule an item for a date"));
+    box.appendChild(mk("p", "A scheduled item is shown on its date. Every other day moves through the rest of the content in a fixed order, so nothing repeats until the whole list has been used."));
+    const dateIn = mk("input"); dateIn.type = "date"; dateIn.min = todayKey(); dateIn.id = "s_date";
+    const typeSel = mk("select"); dateIn.id = "s_date";
+    [["question", "Question of the Day"], ["challenge", "Maths Challenge"], ["mission", "Study Mission"], ["fact", "Fact"]].forEach(([v, t]) => {
+      const o = mk("option", t); o.value = v; typeSel.appendChild(o);
+    });
+    const itemSel = mk("select");
+    function fillItems() {
+      itemSel.innerHTML = "";
+      adminDraft[TYPE_TO_LIST[typeSel.value]].forEach(it => {
+        const o = mk("option", short(itemLabel(TYPE_TO_LIST[typeSel.value], it), 110));
+        o.value = it.id;
+        itemSel.appendChild(o);
+      });
+    }
+    typeSel.addEventListener("change", fillItems);
+    fillItems();
+    box.append(mk("label", "Date"), dateIn, mk("label", "Type"), typeSel, mk("label", "Item"), itemSel);
+    const err = mk("p", "", "admin-err"); err.hidden = true;
+    const add = mk("button", "Add to schedule", "btn-main"); add.type = "button";
+    add.addEventListener("click", () => {
+      if (!dateIn.value) { err.textContent = "Please pick a date."; err.hidden = false; return; }
+      if (!itemSel.value) { err.textContent = "There is no item of this type. Add one first."; err.hidden = false; return; }
+      adminDraft.schedule = adminDraft.schedule.filter(s => !(s.date === dateIn.value && s.type === typeSel.value));
+      adminDraft.schedule.push({ date: dateIn.value, type: typeSel.value, id: itemSel.value });
+      saveDraft();
+      renderAdminTab();
+    });
+    box.append(err, mk("div", undefined, "admin-actions"));
+    box.lastChild.appendChild(add);
+    body.appendChild(box);
+
+    const list = mk("div", undefined, "admin-form");
+    list.appendChild(mk("h3", "Scheduled items"));
+    const sched = adminDraft.schedule.slice().sort((a, b) => a.date.localeCompare(b.date));
+    if (!sched.length) list.appendChild(mk("p", "Nothing scheduled. Every day uses the automatic rotation."));
+    sched.forEach(s => {
+      const row = mk("div", undefined, "row-item");
+      const item = adminDraft[TYPE_TO_LIST[s.type]].find(x => x.id === s.id);
+      const text = mk("div");
+      text.appendChild(mk("p", s.date + " · " + (s.type === "question" ? "Question" : s.type === "challenge" ? "Challenge" : s.type === "mission" ? "Mission" : "Fact")));
+      text.appendChild(mk("small", item ? short(itemLabel(TYPE_TO_LIST[s.type], item), 120) : "(item deleted)"));
+      const del = mk("button", "Remove", "small-btn danger"); del.type = "button";
+      del.addEventListener("click", () => {
+        adminDraft.schedule = adminDraft.schedule.filter(x => x !== s);
+        saveDraft(); renderAdminTab();
+      });
+      row.append(text, del);
+      list.appendChild(row);
+    });
+    body.appendChild(list);
+  }
+
+  function countsLine(c) {
+    return c.questions.length + " questions · " + c.challenges.length + " challenges · " + c.missions.length + " missions · " + c.facts.length + " facts · " + (c.schedule || []).length + " scheduled";
+  }
+  function renderPublish(body) {
+    const box = mk("div", undefined, "admin-form");
+    box.appendChild(mk("h3", "Publish to students"));
+    const steps = mk("ol");
+    ["Click Download daily-content.json below.",
+     "Upload that file into the same folder as index.html on your hosting (for example, the Netlify folder).",
+     "Students see the new content the next time they open the site."].forEach(t => steps.appendChild(mk("li", t)));
+    box.append(steps);
+    box.appendChild(mk("p", "Editor: " + countsLine(adminDraft)));
+    box.appendChild(mk("p", "Students currently see: " + countsLine(pub)));
+    box.appendChild(mk("p", "Changes stay in this browser's editor until you download and upload the file."));
+    const acts = mk("div", undefined, "admin-actions");
+    const dl = mk("button", "Download daily-content.json", "btn-main"); dl.type = "button";
+    dl.addEventListener("click", downloadDraft);
+    const reset = mk("button", "Reset editor to the published content", "small-btn danger"); reset.type = "button";
+    reset.addEventListener("click", () => {
+      if (!confirm("Discard all unpublished changes in the editor?")) return;
+      adminDraft = clone(pub); saveDraft(); renderAdminTab();
+    });
+    acts.append(dl, reset);
+    box.appendChild(acts);
+    const load = mk("label", "Load an existing daily-content.json into the editor");
+    const file = mk("input"); file.type = "file"; file.accept = "application/json,.json";
+    const msg = mk("p", "", "admin-note");
+    file.addEventListener("change", async () => {
+      const f = file.files[0];
+      if (!f) return;
+      try {
+        const j = JSON.parse(await f.text());
+        if (!isBank(j)) throw new Error("bad file");
+        adminDraft = { questions: j.questions, challenges: j.challenges, missions: j.missions, facts: j.facts, schedule: j.schedule || [] };
+        saveDraft();
+        renderAdminTab();
+      } catch (e) {
+        msg.textContent = "That file is not a valid daily-content.json.";
+      }
+    });
+    box.append(load, file, msg);
+    body.appendChild(box);
+  }
+  function downloadDraft() {
+    const data = JSON.stringify({
+      questions: adminDraft.questions, challenges: adminDraft.challenges, missions: adminDraft.missions,
+      facts: adminDraft.facts, schedule: adminDraft.schedule || []
+    }, null, 2);
+    const url = URL.createObjectURL(new Blob([data], { type: "application/json" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = "daily-content.json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  // ---------- Start ----------
+  renderAll();
+  loadPublished();
+  setInterval(() => { if (todayKey() !== lastKey) renderAll(); }, 60000);
+  window.addEventListener("hashchange", showView);
+  showView();
+
+
+  // ---------- Motivation articles (open one at a time to read) ----------
+  ARTICLES.forEach(a => {
+    const d = document.createElement("details");
+    d.className = "article";
+    const s = document.createElement("summary");
+    s.appendChild(document.createTextNode(a.title));
+    s.appendChild(mk("span", "2 min read", "read-time"));
+    d.appendChild(s);
+    d.appendChild(mk("p", a.body));
+    $("articlesList").appendChild(d);
+  });
+
+  // ---------- Formula sheet: class, then topic ----------
+  let activeClass = null;
+  document.querySelectorAll(".class-btn").forEach(btn => {
+    const c = btn.dataset.cls;
+    btn.style.setProperty("--c", CLASS_COLORS[c]);
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".class-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      showTopics(c);
+    });
+  });
+
+  function showTopics(c) {
+    activeClass = c;
+    const panel = $("topicPanel");
+    panel.style.setProperty("--c", CLASS_COLORS[c]);
+    panel.hidden = false;
+    $("topicHeading").textContent = "Class " + c + ": which topic do you need the formulas for?";
+    const grid = $("topicGrid");
+    grid.innerHTML = "";
+    SYLLABUS[c].forEach((tp, i) => {
+      const b = mk("button", undefined, "topic-btn");
+      b.appendChild(mk("span", tp.topic));
+      b.appendChild(mk("span", tp.items.length + " formulas", "count"));
+      b.addEventListener("click", () => openFormulaTab(c, i));
+      grid.appendChild(b);
+    });
+    const all = mk("button", undefined, "topic-btn all");
+    all.appendChild(mk("span", "All topics"));
+    all.appendChild(mk("span", "Every formula for Class " + c, "count"));
+    all.addEventListener("click", () => openFormulaTab(c, -1));
+    grid.appendChild(all);
+    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function openFormulaTab(c, idx) {
+    const topics = idx === -1 ? CHAPTERS[c] : [SYLLABUS[c][idx]];
+    const title = idx === -1
+      ? "Class " + c + ": All Formulas"
+      : "Class " + c + ": " + SYLLABUS[c][idx].topic;
+    const rows = [];
+    topics.forEach(tp => tp.items.forEach(it => {
+      rows.push([tp.topic, it[0], { text: it[1], cls: "f" }, it[2] || ""]);
+    }));
+    openSheetWindow(title, [
+      { name: "Formulas", kind: "formulas", rows: rows },
+      { name: "Tips and Tricks", kind: "tips" }
+    ]);
+  }
+
+
+  // ---------- Spreadsheet window ----------
+  const SHEET_CSS = `
+    html, body { height: 100%; margin: 0; }
+    body { display: flex; flex-direction: column; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #111827; background: #f3f4f6; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; background: #1e3a8a; color: #fff; padding: 12px 16px; }
+    .toolbar h1 { font-size: 1.05rem; margin: 0; }
+    .toolbar button { font-family: inherit; font-size: 0.9rem; padding: 7px 14px; border: none; border-radius: 6px; cursor: pointer; background: #e0ecff; color: #1e3a8a; font-weight: 600; }
+    .sheet-area { flex: 1; overflow: auto; background: #fff; }
+    .sheet { display: none; }
+    .sheet.active { display: block; }
+    table { border-collapse: collapse; min-width: 680px; width: 100%; font-size: 0.92rem; }
+    th, td { border: 1px solid #d1d5db; padding: 8px 10px; text-align: left; vertical-align: top; }
+    thead th { background: #e5e7eb; color: #374151; font-weight: 600; text-align: center; position: sticky; top: 0; z-index: 2; }
+    thead th.corner { width: 48px; }
+    td.rownum { background: #f3f4f6; color: #6b7280; text-align: center; font-weight: 600; position: sticky; left: 0; z-index: 1; }
+    tr.hdr td { background: #dbeafe; color: #1e3a8a; font-weight: 700; }
+    tr.hdr td.rownum { background: #bfdbfe; }
+    tbody tr:not(.hdr):nth-child(even) td:not(.rownum) { background: #f9fafb; }
+    td.f { font-family: "Cambria Math", Cambria, Georgia, "Times New Roman", serif; font-weight: 600; font-size: 0.98rem; }
+    .tabs { display: flex; gap: 4px; background: #e5e7eb; padding: 6px 8px 0; border-top: 1px solid #d1d5db; }
+    .tab { font-family: inherit; font-weight: 600; font-size: 0.9rem; padding: 8px 16px; border: 1px solid #cbd5e1; border-bottom: none; border-radius: 6px 6px 0 0; background: #f3f4f6; color: #374151; cursor: pointer; }
+    .tab.active { background: #fff; color: #1e3a8a; }
+    @media print {
+      .toolbar, .tabs { display: none; }
+      body { display: block; height: auto; }
+      .sheet-area { overflow: visible; }
+      .sheet { display: block !important; page-break-after: always; }
+    }
+  `;
+
+  // Builds a spreadsheet-style grid: column letters, row numbers, a header row
+  function gridTable(el, letters, headers, rows) {
+    const table = el("table");
+    const thead = el("thead");
+    const htr = el("tr");
+    htr.appendChild(el("th", "", "corner"));
+    letters.forEach(L => htr.appendChild(el("th", L)));
+    thead.appendChild(htr);
+    table.appendChild(thead);
+    const tbody = el("tbody");
+    table.appendChild(tbody);
+    const addRow = (num, cells, isHeader) => {
+      const tr = el("tr", undefined, isHeader ? "hdr" : "");
+      tr.appendChild(el("td", String(num), "rownum"));
+      cells.forEach(c => {
+        const text = typeof c === "string" ? c : c.text;
+        const cls = typeof c === "string" ? "" : (c.cls || "");
+        tr.appendChild(el("td", text, cls));
+      });
+      tbody.appendChild(tr);
+    };
+    addRow(1, headers, true);
+    rows.forEach((r, i) => addRow(i + 2, r));
+    return table;
+  }
+
+  function openSheetWindow(title, sheets) {
+    const w = window.open("", "_blank");
+    if (!w) {
+      alert("Please allow pop-ups for this site, then try again.");
+      return;
+    }
+    const d = w.document;
+    const el = (tag, text, cls) => {
+      const n = d.createElement(tag);
+      if (text !== undefined) n.textContent = text;
+      if (cls) n.className = cls;
+      return n;
+    };
+    d.title = title;
+    const style = el("style");
+    style.textContent = SHEET_CSS;
+    d.head.appendChild(style);
+
+    const toolbar = el("div", undefined, "toolbar");
+    toolbar.appendChild(el("h1", title));
+    const printBtn = el("button", "Print");
+    printBtn.addEventListener("click", () => w.print());
+    toolbar.appendChild(printBtn);
+
+    const area = el("div", undefined, "sheet-area");
+    const panels = sheets.map(sh => {
+      const div = el("div", undefined, "sheet");
+      if (sh.kind === "formulas") {
+        div.appendChild(gridTable(el, ["A", "B", "C", "D"], ["Topic", "Name", "Formula", "Notes"], sh.rows));
+      } else {
+        div.appendChild(gridTable(el, ["A", "B"], ["No.", "Tip"], TIPS.map((t, i) => [String(i + 1), t])));
+      }
+      area.appendChild(div);
+      return div;
+    });
+
+    d.body.appendChild(toolbar);
+    d.body.appendChild(area);
+
+    const showSheet = i => {
+      panels.forEach((p, j) => p.classList.toggle("active", j === i));
+      buttons.forEach((b, j) => b.classList.toggle("active", j === i));
+    };
+    const buttons = [];
+    if (sheets.length > 1) {
+      const tabs = el("div", undefined, "tabs");
+      sheets.forEach((sh, i) => {
+        const b = el("button", sh.name, "tab");
+        b.addEventListener("click", () => showSheet(i));
+        tabs.appendChild(b);
+        buttons.push(b);
+      });
+      d.body.appendChild(tabs);
+    }
+    showSheet(0);
+  }
+</script>
+
+</body>
+</html>
