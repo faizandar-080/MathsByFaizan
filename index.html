@@ -53,8 +53,9 @@
     align-items: center;
     justify-content: center;
     gap: 28px;
-    padding: 16px 20px;
+    padding: 16px 64px;
     flex-wrap: wrap;
+    position: relative;
   }
   .clock-info { text-align: center; }
   .date { font-size: 0.98rem; color: #cbd5e1; }
@@ -104,6 +105,100 @@
     border-radius: 50%;
     background: var(--orange);
   }
+
+  /* Three-dot menu and Student Toolkit tab */
+  .site-menu { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); z-index: 20; }
+  .menu-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 0;
+  }
+  .menu-btn:hover, .menu-btn[aria-expanded="true"] { background: rgba(255, 255, 255, 0.2); }
+  .menu-btn:focus-visible { outline: 2px solid #e2b04e; outline-offset: 2px; }
+  .menu-btn span { display: block; width: 5px; height: 5px; border-radius: 50%; background: #fff; }
+  .menu-list {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    min-width: 210px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+    padding: 6px;
+  }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+  }
+  .menu-item:hover, .menu-item:focus-visible { background: #eff6ff; outline: none; }
+  .menu-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+
+  .tab-view {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    background: #dbe3f0;
+  }
+  .tab-strip {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    padding: 8px 10px 0;
+    background: #0b1d3a;
+    flex-shrink: 0;
+  }
+  .tab-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 260px;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 10px 10px 0 0;
+    background: #1e3a8a;
+    color: #cbd5e1;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .tab-item.active { background: #fff; color: #0f172a; cursor: default; }
+  .tab-item:hover:not(.active) { background: #2563eb; color: #fff; }
+  .tab-close {
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0 4px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .tab-close:hover { color: #ef4444; }
+  .tab-frame { flex: 1; width: 100%; border: 0; background: #f4f6fb; }
 
   /* Header */
   header {
@@ -710,7 +805,587 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
     <div class="hand second" id="sHand"></div>
     <div class="pin"></div>
   </div>
+
+  <div class="site-menu">
+    <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-haspopup="true" aria-expanded="false" aria-controls="menuList">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="menu-list" id="menuList" role="menu" hidden>
+      <button type="button" class="menu-item" id="openToolkit" role="menuitem">
+        <span class="menu-dot"></span>Student Toolkit
+      </button>
+    </div>
+  </div>
 </div>
+
+<div class="tab-view" id="toolkitView" hidden>
+  <div class="tab-strip">
+    <button type="button" class="tab-item" id="tabSite">Maths by Faizan</button>
+    <div class="tab-item active">
+      <span>Student Toolkit</span>
+      <button type="button" class="tab-close" id="tabClose" aria-label="Close Student Toolkit">&times;</button>
+    </div>
+  </div>
+  <iframe id="toolkitFrame" class="tab-frame" title="Student Toolkit"></iframe>
+</div>
+
+<textarea id="toolkitSource" hidden><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Toolkit</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --accent: #4f46e5;
+    --accent-2: #0891b2;
+    --accent-soft: #eef2ff;
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #334155;
+      --accent: #818cf8;
+      --accent-2: #22d3ee;
+      --accent-soft: #273049;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    text-align: center;
+    padding: 2.5rem 1rem 4.5rem;
+  }
+  header h1 { margin: 0 0 .3rem; font-size: clamp(1.8rem, 4vw, 2.5rem); }
+  header p { margin: 0; opacity: .92; }
+
+  main {
+    max-width: 1100px;
+    margin: -3rem auto 2rem;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, .06);
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+  .card h2 { margin: 0; font-size: 1.1rem; }
+  .hint { color: var(--muted); font-size: .9rem; margin: 0; }
+
+  .row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+  .row.between { justify-content: space-between; }
+
+  input[type="text"], input[type="number"], input[type="date"] {
+    font: inherit;
+    flex: 1;
+    min-width: 0;
+    padding: .55rem .75rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  button {
+    font: inherit;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: .55rem 1rem;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+  }
+  button:hover { filter: brightness(1.08); }
+  button:focus-visible, input:focus-visible {
+    outline: 3px solid var(--accent-2);
+    outline-offset: 2px;
+  }
+  button.ghost {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--border);
+  }
+  button.icon {
+    padding: .15rem .5rem;
+    background: transparent;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  button.icon:hover { color: #ef4444; filter: none; }
+
+  /* Timer */
+  .modes { display: flex; gap: .4rem; justify-content: center; flex-wrap: wrap; }
+  .modes button {
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: .4rem .7rem;
+    font-size: .85rem;
+  }
+  .modes button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .timer-display {
+    font-size: 3.4rem;
+    font-weight: 700;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    margin: .25rem 0;
+  }
+  .controls { display: flex; gap: .5rem; justify-content: center; }
+  .status { text-align: center; color: var(--muted); font-size: .9rem; margin: 0; min-height: 1.3em; }
+
+  /* To-do */
+  .todo-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .todo {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .45rem .55rem;
+    border-radius: 10px;
+    background: var(--accent-soft);
+  }
+  .todo input[type="checkbox"] { width: 1.1rem; height: 1.1rem; accent-color: var(--accent); flex: 0 0 auto; }
+  .todo span { flex: 1; word-break: break-word; }
+  .todo.done span { text-decoration: line-through; color: var(--muted); }
+  .empty { color: var(--muted); font-size: .9rem; text-align: center; margin: .25rem 0; }
+
+  /* Marks */
+  .marks-list { display: flex; flex-direction: column; gap: .4rem; }
+  .marks-row { display: flex; gap: .4rem; align-items: center; }
+  .marks-row input {
+    font: inherit;
+    flex: 1;
+    min-width: 0;
+    padding: .5rem .6rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .result { font-size: 1.8rem; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
+
+  /* Tip */
+  .tip { font-size: 1rem; min-height: 4.5em; margin: 0; }
+
+  /* Formulas */
+  .formulas { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+  .formulas li { background: var(--accent-soft); border-radius: 10px; padding: .5rem .7rem; font-size: .95rem; }
+  .formulas strong {
+    display: block;
+    font-size: .75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 0 1rem 2rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Student Toolkit</h1>
+  <p>Focus timer, to-do list, marks calculator, exam countdown and more, all in one page.</p>
+</header>
+
+<main>
+
+  <section class="card" aria-labelledby="timer-title">
+    <h2 id="timer-title">Pomodoro timer</h2>
+    <div class="modes" role="group" aria-label="Timer mode">
+      <button type="button" data-mode="focus" aria-pressed="true">Focus 25</button>
+      <button type="button" data-mode="short" aria-pressed="false">Short break 5</button>
+      <button type="button" data-mode="long" aria-pressed="false">Long break 15</button>
+    </div>
+    <div class="timer-display" id="timeLeft">25:00</div>
+    <div class="controls">
+      <button type="button" id="startBtn">Start</button>
+      <button type="button" class="ghost" id="resetBtn">Reset</button>
+    </div>
+    <p class="status" id="timerStatus">Ready to focus</p>
+    <p class="hint">Focus sessions completed: <strong id="sessionCount">0</strong></p>
+  </section>
+
+  <section class="card" aria-labelledby="todo-title">
+    <h2 id="todo-title">To-do list</h2>
+    <form id="todoForm" class="row">
+      <input type="text" id="todoInput" placeholder="Add a task..." aria-label="New task" maxlength="120" required>
+      <button type="submit">Add</button>
+    </form>
+    <ul class="todo-list" id="todoList"></ul>
+    <p class="empty" id="todoEmpty">No tasks yet. Add your first one!</p>
+    <div class="row between">
+      <span class="hint" id="todoCount">0 left</span>
+      <button type="button" class="ghost" id="clearDone">Clear completed</button>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="marks-title">
+    <h2 id="marks-title">Marks calculator</h2>
+    <p class="hint">Enter marks obtained and the maximum marks for each subject.</p>
+    <div class="marks-list" id="marksRows"></div>
+    <div class="row between">
+      <button type="button" class="ghost" id="addSubject">+ Add subject</button>
+      <button type="button" class="ghost" id="resetMarks">Reset</button>
+    </div>
+    <div class="result" id="marksResult">-</div>
+    <p class="hint" id="marksDetail" style="text-align:center"></p>
+  </section>
+
+  <section class="card" aria-labelledby="exam-title">
+    <h2 id="exam-title">Exam countdown</h2>
+    <div class="row">
+      <input type="date" id="examDate" aria-label="Exam date">
+      <button type="button" class="ghost" id="clearExam">Clear</button>
+    </div>
+    <div class="result" id="examResult">Pick a date</div>
+  </section>
+
+  <section class="card" aria-labelledby="tip-title">
+    <h2 id="tip-title">Random study tip</h2>
+    <p class="tip" id="tipText" aria-live="polite">Click the button for a study tip.</p>
+    <div><button type="button" id="tipBtn">Give me a tip</button></div>
+  </section>
+
+  <section class="card" aria-labelledby="formula-title">
+    <h2 id="formula-title">Quick formulas</h2>
+    <ul class="formulas">
+      <li><strong>Quadratic formula</strong>x = (&minus;b &plusmn; &radic;(b&sup2; &minus; 4ac)) / 2a</li>
+      <li><strong>Pythagoras</strong>a&sup2; + b&sup2; = c&sup2;</li>
+      <li><strong>Area of a circle</strong>A = &pi;r&sup2;</li>
+      <li><strong>Simple interest</strong>SI = (P &times; R &times; T) / 100</li>
+      <li><strong>Speed</strong>Speed = Distance / Time</li>
+      <li><strong>Percentage</strong>(Part / Whole) &times; 100</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>Your to-do list, exam date and marks stay saved in this browser only.</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  const $ = (id) => document.getElementById(id);
+
+  const load = (key, fallback) => {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  };
+
+  const save = (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      /* storage unavailable: the tool still works for this session */
+    }
+  };
+
+  /* ---------- Pomodoro timer ---------- */
+  const MODES = {
+    focus: { label: 'Focus', minutes: 25 },
+    short: { label: 'Short break', minutes: 5 },
+    long:  { label: 'Long break', minutes: 15 }
+  };
+
+  let mode = 'focus';
+  let remaining = MODES.focus.minutes * 60;
+  let timerId = null;
+  let sessions = 0;
+
+  const timeEl = $('timeLeft');
+  const startBtn = $('startBtn');
+  const statusEl = $('timerStatus');
+  const sessionEl = $('sessionCount');
+  const modeButtons = document.querySelectorAll('[data-mode]');
+
+  function renderTime() {
+    const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+    const s = String(remaining % 60).padStart(2, '0');
+    timeEl.textContent = m + ':' + s;
+    document.title = m + ':' + s + ' | Student Toolkit';
+  }
+
+  function stopTimer() {
+    clearInterval(timerId);
+    timerId = null;
+    startBtn.textContent = 'Start';
+  }
+
+  function setMode(next) {
+    stopTimer();
+    mode = next;
+    remaining = MODES[next].minutes * 60;
+    modeButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === next)));
+    statusEl.textContent = MODES[next].label + ' mode';
+    renderTime();
+  }
+
+  function tick() {
+    remaining -= 1;
+    if (remaining <= 0) {
+      stopTimer();
+      if (mode === 'focus') {
+        sessions += 1;
+        sessionEl.textContent = sessions;
+        setMode(sessions % 4 === 0 ? 'long' : 'short');
+        statusEl.textContent = 'Session done! Time for a break.';
+      } else {
+        setMode('focus');
+        statusEl.textContent = 'Break over. Ready when you are.';
+      }
+    }
+    renderTime();
+  }
+
+  startBtn.addEventListener('click', () => {
+    if (timerId) {
+      stopTimer();
+      statusEl.textContent = 'Paused';
+      return;
+    }
+    startBtn.textContent = 'Pause';
+    statusEl.textContent = MODES[mode].label + ' running...';
+    timerId = setInterval(tick, 1000);
+  });
+
+  $('resetBtn').addEventListener('click', () => setMode(mode));
+  modeButtons.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+  /* ---------- To-do list ---------- */
+  let todos = load('stk-todos', []);
+  if (!Array.isArray(todos)) todos = [];
+  const todoList = $('todoList');
+
+  function saveTodos() {
+    save('stk-todos', todos);
+  }
+
+  function renderTodos() {
+    todoList.textContent = '';
+
+    todos.forEach((todo, index) => {
+      const li = document.createElement('li');
+      li.className = 'todo' + (todo.done ? ' done' : '');
+
+      const box = document.createElement('input');
+      box.type = 'checkbox';
+      box.checked = !!todo.done;
+      box.setAttribute('aria-label', 'Mark task as done');
+      box.addEventListener('change', () => {
+        todos[index].done = box.checked;
+        saveTodos();
+        renderTodos();
+      });
+
+      const label = document.createElement('span');
+      label.textContent = todo.text;
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'icon';
+      del.textContent = '\u2715';
+      del.setAttribute('aria-label', 'Delete task');
+      del.addEventListener('click', () => {
+        todos.splice(index, 1);
+        saveTodos();
+        renderTodos();
+      });
+
+      li.append(box, label, del);
+      todoList.appendChild(li);
+    });
+
+    const left = todos.filter((t) => !t.done).length;
+    $('todoCount').textContent = left + ' left';
+    $('todoEmpty').hidden = todos.length > 0;
+  }
+
+  $('todoForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = $('todoInput');
+    const text = input.value.trim();
+    if (!text) return;
+    todos.push({ text: text, done: false });
+    input.value = '';
+    saveTodos();
+    renderTodos();
+  });
+
+  $('clearDone').addEventListener('click', () => {
+    todos = todos.filter((t) => !t.done);
+    saveTodos();
+    renderTodos();
+  });
+
+  /* ---------- Marks calculator ---------- */
+  const marksBox = $('marksRows');
+
+  function calcMarks() {
+    let got = 0;
+    let total = 0;
+    let counted = 0;
+
+    marksBox.querySelectorAll('.marks-row').forEach((row) => {
+      const o = parseFloat(row.querySelector('.obt').value);
+      const m = parseFloat(row.querySelector('.max').value);
+      if (!isNaN(o) && !isNaN(m) && m > 0) {
+        got += o;
+        total += m;
+        counted += 1;
+      }
+    });
+
+    if (!counted) {
+      $('marksResult').textContent = '-';
+      $('marksDetail').textContent = 'Enter at least one subject';
+      return;
+    }
+
+    const pct = (got / total) * 100;
+    $('marksResult').textContent = pct.toFixed(2) + '%';
+    $('marksDetail').textContent = got + ' / ' + total + ' marks across ' + counted + ' subject' + (counted === 1 ? '' : 's');
+  }
+
+  function addSubjectRow() {
+    const row = document.createElement('div');
+    row.className = 'marks-row';
+    row.innerHTML =
+      '<input type="number" class="obt" min="0" step="any" placeholder="Obtained" aria-label="Marks obtained">' +
+      '<input type="number" class="max" min="1" step="any" placeholder="Out of" aria-label="Maximum marks">' +
+      '<button type="button" class="icon" aria-label="Remove subject">\u2715</button>';
+
+    row.querySelector('button').addEventListener('click', () => {
+      row.remove();
+      calcMarks();
+    });
+    row.querySelectorAll('input').forEach((i) => i.addEventListener('input', calcMarks));
+
+    marksBox.appendChild(row);
+  }
+
+  function resetMarks() {
+    marksBox.textContent = '';
+    addSubjectRow();
+    addSubjectRow();
+    addSubjectRow();
+    calcMarks();
+  }
+
+  $('addSubject').addEventListener('click', () => {
+    addSubjectRow();
+    calcMarks();
+  });
+  $('resetMarks').addEventListener('click', resetMarks);
+
+  /* ---------- Exam countdown ---------- */
+  const examInput = $('examDate');
+
+  function renderExam() {
+    const date = load('stk-exam', '');
+    const out = $('examResult');
+
+    if (!date) {
+      examInput.value = '';
+      out.textContent = 'Pick a date';
+      return;
+    }
+
+    examInput.value = date;
+    const parts = date.split('-').map(Number);
+    const target = new Date(parts[0], parts[1] - 1, parts[2]);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diff = Math.round((target - today) / 86400000);
+
+    if (diff > 0) {
+      out.textContent = diff + (diff === 1 ? ' day' : ' days') + ' to go';
+    } else if (diff === 0) {
+      out.textContent = "It's today. You've got this!";
+    } else {
+      out.textContent = 'Exam was ' + Math.abs(diff) + (diff === -1 ? ' day' : ' days') + ' ago';
+    }
+  }
+
+  examInput.addEventListener('change', () => {
+    save('stk-exam', examInput.value);
+    renderExam();
+  });
+  $('clearExam').addEventListener('click', () => {
+    save('stk-exam', '');
+    renderExam();
+  });
+
+  /* ---------- Random study tip ---------- */
+  const TIPS = [
+    "Explain a topic out loud as if you were teaching a friend. Wherever you get stuck is exactly what to revise.",
+    "Test yourself instead of re-reading. Closing the book and recalling the idea builds memory far better.",
+    "Study in short bursts with breaks in between. Your brain consolidates what you learned while you rest.",
+    "Attempt practice problems before checking the solution. Struggling first builds stronger understanding.",
+    "Sleep is part of studying. A good night's rest after learning helps you hold on to what you learned.",
+    "Make a one-page summary of each chapter. Writing it in your own words beats copying the textbook.",
+    "Solve past papers under timed conditions so exam pressure feels familiar on the day.",
+    "Spread revision over several days. Short, frequent sessions beat one long cram the night before.",
+    "When you get a question wrong, write down why. Patterns in your mistakes show what to fix next.",
+    "Drink water and take a short walk. Small physical breaks keep your focus sharper."
+  ];
+
+  $('tipBtn').addEventListener('click', () => {
+    $('tipText').textContent = TIPS[Math.floor(Math.random() * TIPS.length)];
+  });
+
+  /* ---------- Initial render ---------- */
+  renderTime();
+  renderTodos();
+  resetMarks();
+  renderExam();
+})();
+</script>
+</body>
+</html>
+</textarea>
 
 <header>
   <span class="deco d1">π</span>
@@ -1936,35 +2611,6 @@ const HUB_BANK = {
     });
   });
 
-  // ---------- Tips and tricks ----------
-  const TIPS = [
-    "Practise two examples right after learning a formula, without looking at the book.",
-    "Check your answer by putting a simple number into the original question and seeing if both sides match.",
-    "To square a number that ends in 5, multiply the tens digit by the next whole number, then write 25 after it. For example, 35² = 3 × 4 = 12, so 35² = 1225.",
-    "To multiply a two-digit number by 11, add its two digits and place the sum between them. For example, 32 × 11 = 352, because 3 + 2 = 5. This works when the digits add to less than 10.",
-    "To multiply by 5, multiply by 10 and then halve the result. For example, 36 × 5 = 360 ÷ 2 = 180.",
-    "A number is divisible by 3 if the sum of its digits is divisible by 3. The same check works for 9, with the digit sum divisible by 9.",
-    "A number is divisible by 4 if its last two digits form a number divisible by 4.",
-    "A perfect square never ends in 2, 3, 7 or 8. If your answer ends in one of these, check your working.",
-    "To find 10% of a number, move the decimal point one place to the left. For 15%, add half of that to 10%.",
-    "Convert percentages to fractions to calculate faster. Since 25% is 1/4, 25% of 200 is 50.",
-    "Before solving a word problem, write down what is given and what you need to find.",
-    "Keep an error notebook. Write each mistake and its correct method, then try the same question again a few days later.",
-    "Use the Pomodoro method: 25 minutes of focused study, then a 5-minute break.",
-    "Use active recall: close the book, write down everything you remember from the chapter, then check what you missed.",
-    "Draw a neat figure for every geometry question. A clear diagram often shows the method before you write a single step.",
-    "Write units with answers to word problems, such as cm, m² or rupees.",
-    "In an exam, skim the whole paper for two minutes first, then start with the questions you know best.",
-    "When you are stuck, try the same type of problem with smaller numbers. The pattern often becomes clear.",
-    "Make a one-page formula sheet for each chapter and read it for ten minutes before going to sleep.",
-    "Teach the topic to a friend or to an empty room. If you can explain it simply, you understand it.",
-    "When multiplying, two negatives make a positive, and a positive with a negative makes a negative.",
-    "Write negative numbers in brackets when squaring. (−3)² = 9, while −3² = −9.",
-    "For a quadratic equation, try factorising first. If it does not factorise easily, use the quadratic formula.",
-    "Learn the trigonometric values for 0°, 30°, 45°, 60° and 90° in a small table. Most standard questions use them.",
-    "Before using a formula, check its conditions. For example, the sum formula for a GP needs r ≠ 1.",
-    "Always write + C when finding an indefinite integral, because the constant can be any number."
-  ];
 
   // ---------- Motivation articles ----------
   const ARTICLES = [
@@ -2672,6 +3318,44 @@ const HUB_BANK = {
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+
+  // ---------- Three-dot menu and Student Toolkit tab ----------
+  const menuBtn = $("menuBtn");
+  const menuList = $("menuList");
+  const toolkitView = $("toolkitView");
+  const toolkitFrame = $("toolkitFrame");
+
+  function setMenu(open) {
+    menuList.hidden = !open;
+    menuBtn.setAttribute("aria-expanded", String(open));
+  }
+  menuBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    setMenu(menuList.hidden);
+  });
+  document.addEventListener("click", e => {
+    if (!menuList.hidden && !e.target.closest(".site-menu")) setMenu(false);
+  });
+
+  function openToolkit() {
+    setMenu(false);
+    // Load the toolkit once; its frame keeps its state while the tab is switched.
+    if (!toolkitFrame.srcdoc) toolkitFrame.srcdoc = $("toolkitSource").value;
+    toolkitView.hidden = false;
+    window.scrollTo(0, 0);
+  }
+  function closeToolkit() {
+    toolkitView.hidden = true;
+    menuBtn.focus();
+  }
+  $("openToolkit").addEventListener("click", openToolkit);
+  $("tabSite").addEventListener("click", closeToolkit);
+  $("tabClose").addEventListener("click", closeToolkit);
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (!toolkitView.hidden) closeToolkit();
+    else if (!menuList.hidden) setMenu(false);
+  });
 
   // ---------- Start ----------
   renderAll();
