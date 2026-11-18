@@ -860,6 +860,7 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
     }
   }
 
+  [hidden] { display: none !important; }
   * { box-sizing: border-box; }
 
   body {
@@ -952,6 +953,8 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
     font-size: .85rem;
   }
   .modes button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .custom-time { display: flex; gap: .4rem; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .custom-time input { flex: 0 0 4.5rem; width: 4.5rem; text-align: center; }
   .timer-display {
     font-size: 3.4rem;
     font-weight: 700;
@@ -986,12 +989,17 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
   .todo.done span { text-decoration: line-through; color: var(--muted); }
   .empty { color: var(--muted); font-size: .9rem; text-align: center; margin: .25rem 0; }
 
-  /* Marks */
+  /* Marks: five fixed subjects */
+  .marks-head, .marks-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: .4rem;
+    align-items: center;
+  }
+  .marks-head { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
   .marks-list { display: flex; flex-direction: column; gap: .4rem; }
-  .marks-row { display: flex; gap: .4rem; align-items: center; }
   .marks-row input {
     font: inherit;
-    flex: 1;
     min-width: 0;
     padding: .5rem .6rem;
     border: 1px solid var(--border);
@@ -999,21 +1007,87 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
     background: var(--bg);
     color: var(--text);
   }
+  .marks-row.bad input.obt, .marks-row.bad input.max { border-color: #ef4444; }
   .result { font-size: 1.8rem; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
+  .breakdown {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    font-size: .9rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* Exam countdown */
+  .exam-row input[type="text"] { flex: 1 1 140px; }
+  .exam-row input[type="date"] { flex: 1 1 150px; }
 
   /* Tip */
   .tip { font-size: 1rem; min-height: 4.5em; margin: 0; }
 
-  /* Formulas */
-  .formulas { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5rem; }
-  .formulas li { background: var(--accent-soft); border-radius: 10px; padding: .5rem .7rem; font-size: .95rem; }
-  .formulas strong {
-    display: block;
-    font-size: .75rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .05em;
+  /* Floating scientific calculator */
+  .calc-fab {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 50;
+    border-radius: 999px;
+    padding: .7rem 1.2rem;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, .25);
   }
+  .calc-panel {
+    position: fixed;
+    right: 18px;
+    bottom: 74px;
+    z-index: 50;
+    width: min(360px, calc(100vw - 36px));
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, .3);
+    padding: .9rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+  }
+  .calc-panel:focus { outline: none; }
+  .calc-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+  .calc-head strong { font-size: 1rem; }
+  .calc-screen {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .6rem .8rem;
+    text-align: right;
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .calc-mem { min-height: 1em; font-size: .75rem; color: var(--accent); text-align: left; font-weight: 700; }
+  .calc-expr { font-size: .9rem; color: var(--muted); min-height: 1.3em; word-break: break-all; }
+  .calc-res { font-size: 1.8rem; font-weight: 700; word-break: break-all; font-variant-numeric: tabular-nums; }
+  .calc-keys { display: grid; gap: .4rem; }
+  .calc-keys.sci { grid-template-columns: repeat(5, 1fr); }
+  .calc-keys.std { grid-template-columns: repeat(4, 1fr); }
+  .ck {
+    padding: .5rem 0;
+    font-size: .95rem;
+    background: var(--accent-soft);
+    color: var(--text);
+    border: 1px solid var(--border);
+    min-width: 0;
+  }
+  .ck.sm { font-size: .8rem; }
+  .ck.num { background: var(--card); }
+  .ck.op { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .ck.alt { background: var(--border); }
+  .ck.span4 { grid-column: span 4; }
 
   footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 0 1rem 2rem; }
 </style>
@@ -1022,7 +1096,7 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
 
 <header>
   <h1>Student Toolkit</h1>
-  <p>Focus timer, to-do list, marks calculator, exam countdown and more, all in one page.</p>
+  <p>Focus timer, to-do list, marks calculator, exam countdown, study tips and a scientific calculator, all in one page.</p>
 </header>
 
 <main>
@@ -1034,6 +1108,14 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
       <button type="button" data-mode="short" aria-pressed="false">Short break 5</button>
       <button type="button" data-mode="long" aria-pressed="false">Long break 15</button>
     </div>
+    <form class="custom-time" id="customForm">
+      <label for="customMin" class="hint">Set your own time</label>
+      <input type="number" id="customMin" min="0" max="999" step="1" value="25" aria-label="Minutes">
+      <span class="hint">min</span>
+      <input type="number" id="customSec" min="0" max="59" step="1" value="0" aria-label="Seconds">
+      <span class="hint">sec</span>
+      <button type="submit" class="ghost">Set</button>
+    </form>
     <div class="timer-display" id="timeLeft">25:00</div>
     <div class="controls">
       <button type="button" id="startBtn">Start</button>
@@ -1059,19 +1141,47 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
 
   <section class="card" aria-labelledby="marks-title">
     <h2 id="marks-title">Marks calculator</h2>
-    <p class="hint">Enter marks obtained and the maximum marks for each subject.</p>
-    <div class="marks-list" id="marksRows"></div>
-    <div class="row between">
-      <button type="button" class="ghost" id="addSubject">+ Add subject</button>
-      <button type="button" class="ghost" id="resetMarks">Reset</button>
+    <p class="hint">Type each subject name, the marks you got and the maximum marks. There are always five subjects.</p>
+    <div class="marks-head" aria-hidden="true"><span>Subject</span><span>Obtained</span><span>Out of</span></div>
+    <div class="marks-list" id="marksRows">
+      <div class="marks-row">
+        <input type="text" class="name" maxlength="30" placeholder="Subject 1" aria-label="Subject 1 name">
+        <input type="number" class="obt" min="0" step="any" placeholder="Obtained" aria-label="Subject 1 marks obtained">
+        <input type="number" class="max" min="1" step="any" placeholder="Out of" aria-label="Subject 1 maximum marks">
+      </div>
+      <div class="marks-row">
+        <input type="text" class="name" maxlength="30" placeholder="Subject 2" aria-label="Subject 2 name">
+        <input type="number" class="obt" min="0" step="any" placeholder="Obtained" aria-label="Subject 2 marks obtained">
+        <input type="number" class="max" min="1" step="any" placeholder="Out of" aria-label="Subject 2 maximum marks">
+      </div>
+      <div class="marks-row">
+        <input type="text" class="name" maxlength="30" placeholder="Subject 3" aria-label="Subject 3 name">
+        <input type="number" class="obt" min="0" step="any" placeholder="Obtained" aria-label="Subject 3 marks obtained">
+        <input type="number" class="max" min="1" step="any" placeholder="Out of" aria-label="Subject 3 maximum marks">
+      </div>
+      <div class="marks-row">
+        <input type="text" class="name" maxlength="30" placeholder="Subject 4" aria-label="Subject 4 name">
+        <input type="number" class="obt" min="0" step="any" placeholder="Obtained" aria-label="Subject 4 marks obtained">
+        <input type="number" class="max" min="1" step="any" placeholder="Out of" aria-label="Subject 4 maximum marks">
+      </div>
+      <div class="marks-row">
+        <input type="text" class="name" maxlength="30" placeholder="Subject 5" aria-label="Subject 5 name">
+        <input type="number" class="obt" min="0" step="any" placeholder="Obtained" aria-label="Subject 5 marks obtained">
+        <input type="number" class="max" min="1" step="any" placeholder="Out of" aria-label="Subject 5 maximum marks">
+      </div>
+    </div>
+    <div class="row" style="justify-content: flex-end">
+      <button type="button" class="ghost" id="resetMarks">Clear all</button>
     </div>
     <div class="result" id="marksResult">-</div>
     <p class="hint" id="marksDetail" style="text-align:center"></p>
+    <ul class="breakdown" id="marksBreakdown"></ul>
   </section>
 
   <section class="card" aria-labelledby="exam-title">
     <h2 id="exam-title">Exam countdown</h2>
-    <div class="row">
+    <div class="row exam-row">
+      <input type="text" id="examSubject" placeholder="Subject with the exam" aria-label="Subject with the exam" maxlength="40">
       <input type="date" id="examDate" aria-label="Exam date">
       <button type="button" class="ghost" id="clearExam">Clear</button>
     </div>
@@ -1084,21 +1194,25 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
     <div><button type="button" id="tipBtn">Give me a tip</button></div>
   </section>
 
-  <section class="card" aria-labelledby="formula-title">
-    <h2 id="formula-title">Quick formulas</h2>
-    <ul class="formulas">
-      <li><strong>Quadratic formula</strong>x = (&minus;b &plusmn; &radic;(b&sup2; &minus; 4ac)) / 2a</li>
-      <li><strong>Pythagoras</strong>a&sup2; + b&sup2; = c&sup2;</li>
-      <li><strong>Area of a circle</strong>A = &pi;r&sup2;</li>
-      <li><strong>Simple interest</strong>SI = (P &times; R &times; T) / 100</li>
-      <li><strong>Speed</strong>Speed = Distance / Time</li>
-      <li><strong>Percentage</strong>(Part / Whole) &times; 100</li>
-    </ul>
-  </section>
-
 </main>
 
-<footer>Your to-do list, exam date and marks stay saved in this browser only.</footer>
+<footer>Your to-do list, exam details and marks stay saved in this browser only.</footer>
+
+<button type="button" class="calc-fab" id="calcFab" aria-expanded="false" aria-controls="calcPanel">Calculator</button>
+
+<section class="calc-panel" id="calcPanel" role="dialog" aria-label="Scientific calculator" tabindex="-1" hidden>
+  <div class="calc-head">
+    <strong>Scientific calculator</strong>
+    <button type="button" class="icon" id="calcClose" aria-label="Close calculator">&times;</button>
+  </div>
+  <div class="calc-screen">
+    <div class="calc-mem" id="calcMem"></div>
+    <div class="calc-expr" id="calcExpr"></div>
+    <div class="calc-res" id="calcRes" aria-live="polite">0</div>
+  </div>
+  <div class="calc-keys sci" id="calcSci"></div>
+  <div class="calc-keys std" id="calcKeys"></div>
+</section>
 
 <script>
 (function () {
@@ -1131,7 +1245,8 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
   };
 
   let mode = 'focus';
-  let remaining = MODES.focus.minutes * 60;
+  let baseSeconds = MODES.focus.minutes * 60;
+  let remaining = baseSeconds;
   let timerId = null;
   let sessions = 0;
 
@@ -1140,6 +1255,8 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
   const statusEl = $('timerStatus');
   const sessionEl = $('sessionCount');
   const modeButtons = document.querySelectorAll('[data-mode]');
+  const customMin = $('customMin');
+  const customSec = $('customSec');
 
   function renderTime() {
     const m = String(Math.floor(remaining / 60)).padStart(2, '0');
@@ -1154,12 +1271,35 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
     startBtn.textContent = 'Start';
   }
 
+  function setModeButtons(active) {
+    modeButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === active)));
+  }
+
   function setMode(next) {
     stopTimer();
     mode = next;
-    remaining = MODES[next].minutes * 60;
-    modeButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === next)));
+    baseSeconds = MODES[next].minutes * 60;
+    remaining = baseSeconds;
+    setModeButtons(next);
     statusEl.textContent = MODES[next].label + ' mode';
+    renderTime();
+  }
+
+  function setCustomTime(e) {
+    e.preventDefault();
+    const m = Math.min(Math.max(parseInt(customMin.value, 10) || 0, 0), 999);
+    const s = Math.min(Math.max(parseInt(customSec.value, 10) || 0, 0), 59);
+    const total = m * 60 + s;
+    if (total <= 0) {
+      statusEl.textContent = 'Enter a time longer than 0 seconds.';
+      return;
+    }
+    stopTimer();
+    mode = 'focus';
+    baseSeconds = total;
+    remaining = total;
+    setModeButtons(null);
+    statusEl.textContent = 'Custom timer set. Ready when you are.';
     renderTime();
   }
 
@@ -1187,12 +1327,18 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
       return;
     }
     startBtn.textContent = 'Pause';
-    statusEl.textContent = MODES[mode].label + ' running...';
+    statusEl.textContent = (mode === 'focus' ? 'Focus' : MODES[mode].label) + ' running...';
     timerId = setInterval(tick, 1000);
   });
 
-  $('resetBtn').addEventListener('click', () => setMode(mode));
+  $('resetBtn').addEventListener('click', () => {
+    stopTimer();
+    remaining = baseSeconds;
+    statusEl.textContent = 'Timer reset.';
+    renderTime();
+  });
   modeButtons.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  $('customForm').addEventListener('submit', setCustomTime);
 
   /* ---------- To-do list ---------- */
   let todos = load('stk-todos', []);
@@ -1226,7 +1372,7 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
       const del = document.createElement('button');
       del.type = 'button';
       del.className = 'icon';
-      del.textContent = '\u2715';
+      del.textContent = '✕';
       del.setAttribute('aria-label', 'Delete task');
       del.addEventListener('click', () => {
         todos.splice(index, 1);
@@ -1260,105 +1406,137 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
     renderTodos();
   });
 
-  /* ---------- Marks calculator ---------- */
-  const marksBox = $('marksRows');
+  /* ---------- Marks calculator (five fixed subjects) ---------- */
+  const MARKS_KEY = 'stk-marks';
+  const marksRows = Array.from(document.querySelectorAll('#marksRows .marks-row'));
+
+  function saveMarks() {
+    save(MARKS_KEY, marksRows.map((row) => [
+      row.querySelector('.name').value,
+      row.querySelector('.obt').value,
+      row.querySelector('.max').value
+    ]));
+  }
+
+  function loadMarks() {
+    const saved = load(MARKS_KEY, []);
+    if (!Array.isArray(saved)) return;
+    marksRows.forEach((row, i) => {
+      const entry = saved[i];
+      if (!Array.isArray(entry)) return;
+      row.querySelector('.name').value = String(entry[0] || '');
+      row.querySelector('.obt').value = String(entry[1] || '');
+      row.querySelector('.max').value = String(entry[2] || '');
+    });
+  }
 
   function calcMarks() {
+    saveMarks();
+    const result = $('marksResult');
+    const detail = $('marksDetail');
+    const list = $('marksBreakdown');
+    list.textContent = '';
+
     let got = 0;
     let total = 0;
     let counted = 0;
+    let invalid = false;
 
-    marksBox.querySelectorAll('.marks-row').forEach((row) => {
+    marksRows.forEach((row, i) => {
       const o = parseFloat(row.querySelector('.obt').value);
       const m = parseFloat(row.querySelector('.max').value);
-      if (!isNaN(o) && !isNaN(m) && m > 0) {
-        got += o;
-        total += m;
-        counted += 1;
+      const name = row.querySelector('.name').value.trim() || ('Subject ' + (i + 1));
+      const filled = !isNaN(o) && !isNaN(m);
+      const bad = filled && (m <= 0 || o < 0 || o > m);
+      row.classList.toggle('bad', bad);
+      if (bad) {
+        invalid = true;
+        return;
       }
+      if (!filled) return;
+      got += o;
+      total += m;
+      counted += 1;
+      const li = document.createElement('li');
+      li.textContent = name + ': ' + o + ' / ' + m + ' (' + ((o / m) * 100).toFixed(1) + '%)';
+      list.appendChild(li);
     });
 
-    if (!counted) {
-      $('marksResult').textContent = '-';
-      $('marksDetail').textContent = 'Enter at least one subject';
+    if (invalid) {
+      result.textContent = '-';
+      detail.textContent = 'Check the highlighted subject: marks must be between 0 and the maximum.';
       return;
     }
-
-    const pct = (got / total) * 100;
-    $('marksResult').textContent = pct.toFixed(2) + '%';
-    $('marksDetail').textContent = got + ' / ' + total + ' marks across ' + counted + ' subject' + (counted === 1 ? '' : 's');
+    if (!counted) {
+      result.textContent = '-';
+      detail.textContent = 'Fill in at least one subject to see your result.';
+      return;
+    }
+    result.textContent = ((got / total) * 100).toFixed(2) + '%';
+    detail.textContent = got + ' / ' + total + ' marks across ' + counted + ' subject' + (counted === 1 ? '' : 's');
   }
 
-  function addSubjectRow() {
-    const row = document.createElement('div');
-    row.className = 'marks-row';
-    row.innerHTML =
-      '<input type="number" class="obt" min="0" step="any" placeholder="Obtained" aria-label="Marks obtained">' +
-      '<input type="number" class="max" min="1" step="any" placeholder="Out of" aria-label="Maximum marks">' +
-      '<button type="button" class="icon" aria-label="Remove subject">\u2715</button>';
-
-    row.querySelector('button').addEventListener('click', () => {
-      row.remove();
-      calcMarks();
-    });
-    row.querySelectorAll('input').forEach((i) => i.addEventListener('input', calcMarks));
-
-    marksBox.appendChild(row);
-  }
-
-  function resetMarks() {
-    marksBox.textContent = '';
-    addSubjectRow();
-    addSubjectRow();
-    addSubjectRow();
-    calcMarks();
-  }
-
-  $('addSubject').addEventListener('click', () => {
-    addSubjectRow();
+  marksRows.forEach((row) => row.querySelectorAll('input').forEach((inp) => inp.addEventListener('input', calcMarks)));
+  $('resetMarks').addEventListener('click', () => {
+    marksRows.forEach((row) => row.querySelectorAll('input').forEach((inp) => { inp.value = ''; }));
     calcMarks();
   });
-  $('resetMarks').addEventListener('click', resetMarks);
 
-  /* ---------- Exam countdown ---------- */
+  /* ---------- Exam countdown (subject name + date) ---------- */
+  const EXAM_DATE_KEY = 'stk-exam';
+  const EXAM_SUBJECT_KEY = 'stk-exam-subject';
+  const examSubject = $('examSubject');
   const examInput = $('examDate');
 
-  function renderExam() {
-    const date = load('stk-exam', '');
+  function updateExam() {
+    const date = load(EXAM_DATE_KEY, '');
     const out = $('examResult');
-
-    if (!date) {
-      examInput.value = '';
+    if (!date || typeof date !== 'string') {
       out.textContent = 'Pick a date';
       return;
     }
-
-    examInput.value = date;
     const parts = date.split('-').map(Number);
     const target = new Date(parts[0], parts[1] - 1, parts[2]);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const diff = Math.round((target - today) / 86400000);
+    const subject = examSubject.value.trim();
+    const prefix = subject ? subject + ': ' : '';
 
     if (diff > 0) {
-      out.textContent = diff + (diff === 1 ? ' day' : ' days') + ' to go';
+      out.textContent = prefix + diff + (diff === 1 ? ' day' : ' days') + ' to go';
     } else if (diff === 0) {
-      out.textContent = "It's today. You've got this!";
+      out.textContent = prefix + "It's today. You've got this!";
     } else {
-      out.textContent = 'Exam was ' + Math.abs(diff) + (diff === -1 ? ' day' : ' days') + ' ago';
+      out.textContent = prefix + 'Exam was ' + Math.abs(diff) + (diff === -1 ? ' day' : ' days') + ' ago';
     }
   }
 
+  function renderExam() {
+    const savedSubject = load(EXAM_SUBJECT_KEY, '');
+    examSubject.value = typeof savedSubject === 'string' ? savedSubject : '';
+    const savedDate = load(EXAM_DATE_KEY, '');
+    examInput.value = typeof savedDate === 'string' ? savedDate : '';
+    updateExam();
+  }
+
+  examSubject.addEventListener('input', () => {
+    save(EXAM_SUBJECT_KEY, examSubject.value);
+    updateExam();
+  });
   examInput.addEventListener('change', () => {
-    save('stk-exam', examInput.value);
-    renderExam();
+    save(EXAM_DATE_KEY, examInput.value);
+    updateExam();
   });
   $('clearExam').addEventListener('click', () => {
-    save('stk-exam', '');
-    renderExam();
+    save(EXAM_DATE_KEY, '');
+    save(EXAM_SUBJECT_KEY, '');
+    examSubject.value = '';
+    examInput.value = '';
+    updateExam();
   });
 
-  /* ---------- Random study tip ---------- */
+  /* ---------- Random study tips ---------- */
   const TIPS = [
     "Explain a topic out loud as if you were teaching a friend. Wherever you get stuck is exactly what to revise.",
     "Test yourself instead of re-reading. Closing the book and recalling the idea builds memory far better.",
@@ -1369,18 +1547,463 @@ body.admin-mode > *:not(#adminView) { display: none !important; }
     "Solve past papers under timed conditions so exam pressure feels familiar on the day.",
     "Spread revision over several days. Short, frequent sessions beat one long cram the night before.",
     "When you get a question wrong, write down why. Patterns in your mistakes show what to fix next.",
-    "Drink water and take a short walk. Small physical breaks keep your focus sharper."
+    "Drink water and take a short walk. Small physical breaks keep your focus sharper.",
+    "Start with your hardest subject while your mind is fresh, and save easier topics for later.",
+    "Write a small goal for each subject in your weekly plan, and tick it off as soon as you finish.",
+    "Put your phone in another room while you study. Even a silent notification pulls your attention away.",
+    "Use flashcards for formulas and definitions. Review the cards you got wrong more often than the rest.",
+    "Skim the headings and exercises of a new chapter before reading it. You will know what to look for.",
+    "Teach the idea in your own words, as if explaining it to a younger student.",
+    "Revise your notes within 24 hours of a lesson. A quick review soon after learning helps memory the most.",
+    "Read every question twice and underline the words that tell you what to find.",
+    "Mix topics within one session instead of spending hours on one chapter. Switching helps you choose the right method.",
+    "Study at the same place and time each day. A fixed routine makes it easier to start.",
+    "Keep a list of key terms for each subject and check that you can explain every one.",
+    "Stand up, stretch and look at something far away for a few minutes between study blocks.",
+    "Estimate the answer before you calculate it. A rough estimate shows whether your exact answer is reasonable.",
+    "Ask for help as soon as you are stuck. A problem feels much bigger the longer you wait.",
+    "End each session by writing what you learned and what is still unclear.",
+    "Use your error list as a study guide. It shows exactly what to practise next.",
+    "Reward yourself after finishing a hard task, even with a short walk or a favourite snack.",
+    "Quiz a friend and explain your answers out loud. Explaining shows what you really know.",
+    "Eat a light meal before studying. Being very hungry or very full makes concentration hard.",
+    "Keep your study space tidy and well lit. A clear desk helps your mind stay organised.",
+    "Decide what you will finish before you start, such as five questions, and stop when you reach it.",
+    "After reading the text, look at the diagram or graph again. Seeing an idea two ways helps it stick.",
+    "Practise a little every day rather than cramming. Ten minutes daily beats a long session the night before.",
+    "Once a week, sit a timed test paper and note your score, so you can see your progress."
   ];
 
+  let lastTip = -1;
   $('tipBtn').addEventListener('click', () => {
-    $('tipText').textContent = TIPS[Math.floor(Math.random() * TIPS.length)];
+    let i;
+    do {
+      i = Math.floor(Math.random() * TIPS.length);
+    } while (TIPS.length > 1 && i === lastTip);
+    lastTip = i;
+    $('tipText').textContent = TIPS[i];
+  });
+
+  /* ---------- Scientific calculator: core logic (no page access) ---------- */
+  /* CALC-CORE-START */
+  const CALC_NAMES = ['asin', 'acos', 'atan', 'sqrt', 'cbrt', 'abs', 'sin', 'cos', 'tan', 'ln', 'log', 'pi', 'ans', 'mem', 'e'];
+
+  function calcTokenize(src) {
+    const out = [];
+    let i = 0;
+    while (i < src.length) {
+      const ch = src[i];
+      if (ch === ' ') { i += 1; continue; }
+      const num = /^(\d+\.?\d*|\.\d+)/.exec(src.slice(i));
+      if (num) {
+        out.push({ t: 'num', v: parseFloat(num[0]) });
+        i += num[0].length;
+        continue;
+      }
+      if (ch >= 'a' && ch <= 'z') {
+        const name = CALC_NAMES.find((n) => src.startsWith(n, i));
+        if (!name) throw new Error('Unknown name');
+        out.push({ t: 'name', v: name });
+        i += name.length;
+        continue;
+      }
+      if ('+-*/^!%()'.indexOf(ch) !== -1) {
+        out.push({ t: 'op', v: ch });
+        i += 1;
+        continue;
+      }
+      throw new Error('Unexpected character');
+    }
+    return out;
+  }
+
+  function calcFactorial(n) {
+    if (n < 0 || n > 170 || Math.floor(n) !== n) throw new Error('Factorial needs a whole number from 0 to 170');
+    let r = 1;
+    for (let k = 2; k <= n; k += 1) r *= k;
+    return r;
+  }
+
+  function calcApply(name, x, deg) {
+    const toRad = (d) => (d * Math.PI) / 180;
+    const fromRad = (r) => (deg ? (r * 180) / Math.PI : r);
+    let r;
+    switch (name) {
+      case 'sin': r = Math.sin(deg ? toRad(x) : x); break;
+      case 'cos': r = Math.cos(deg ? toRad(x) : x); break;
+      case 'tan':
+        if (deg && Math.abs((((x % 180) + 180) % 180) - 90) < 1e-12) throw new Error('tan is undefined here');
+        r = Math.tan(deg ? toRad(x) : x);
+        break;
+      case 'asin':
+        if (x < -1 || x > 1) throw new Error('Outside the domain');
+        r = fromRad(Math.asin(x));
+        break;
+      case 'acos':
+        if (x < -1 || x > 1) throw new Error('Outside the domain');
+        r = fromRad(Math.acos(x));
+        break;
+      case 'atan': r = fromRad(Math.atan(x)); break;
+      case 'ln':
+        if (x <= 0) throw new Error('Outside the domain');
+        r = Math.log(x);
+        break;
+      case 'log':
+        if (x <= 0) throw new Error('Outside the domain');
+        r = Math.log10(x);
+        break;
+      case 'sqrt':
+        if (x < 0) throw new Error('Outside the domain');
+        r = Math.sqrt(x);
+        break;
+      case 'cbrt': r = Math.cbrt(x); break;
+      case 'abs': r = Math.abs(x); break;
+      default: throw new Error('Unknown function');
+    }
+    if (name === 'sin' || name === 'cos' || name === 'tan') {
+      if (Math.abs(r) < 1e-12) r = 0;
+    }
+    if (!isFinite(r)) throw new Error('Result too large');
+    return r;
+  }
+
+  function calcEvaluate(src, env) {
+    const tokens = calcTokenize(src);
+    let i = 0;
+    const isOp = (v) => i < tokens.length && tokens[i].t === 'op' && tokens[i].v === v;
+    const startsValue = () => i < tokens.length && (tokens[i].t === 'num' || tokens[i].t === 'name' || isOp('('));
+    const expect = (v) => {
+      if (!isOp(v)) throw new Error('Missing ' + v);
+      i += 1;
+    };
+
+    function parseExpr() {
+      let v = parseTerm();
+      while (isOp('+') || isOp('-')) {
+        const op = tokens[i].v;
+        i += 1;
+        const r = parseTerm();
+        v = op === '+' ? v + r : v - r;
+      }
+      return v;
+    }
+
+    function parseTerm() {
+      let v = parseUnary();
+      for (;;) {
+        if (isOp('*') || isOp('/')) {
+          const op = tokens[i].v;
+          i += 1;
+          const r = parseUnary();
+          if (op === '/') {
+            if (r === 0) throw new Error('Cannot divide by zero');
+            v /= r;
+          } else {
+            v *= r;
+          }
+        } else if (startsValue()) {
+          v *= parseUnary();
+        } else {
+          break;
+        }
+      }
+      return v;
+    }
+
+    function parseUnary() {
+      if (isOp('-')) { i += 1; return -parseUnary(); }
+      if (isOp('+')) { i += 1; return parseUnary(); }
+      return parsePower();
+    }
+
+    function parsePower() {
+      const base = parsePostfix();
+      if (isOp('^')) {
+        i += 1;
+        return Math.pow(base, parseUnary());
+      }
+      return base;
+    }
+
+    function parsePostfix() {
+      let v = parsePrimary();
+      while (isOp('!') || isOp('%')) {
+        const op = tokens[i].v;
+        i += 1;
+        v = op === '!' ? calcFactorial(v) : v / 100;
+      }
+      return v;
+    }
+
+    function parsePrimary() {
+      if (i >= tokens.length) throw new Error('Expression is incomplete');
+      const tok = tokens[i];
+      if (tok.t === 'num') {
+        i += 1;
+        return tok.v;
+      }
+      if (isOp('(')) {
+        i += 1;
+        const v = parseExpr();
+        expect(')');
+        return v;
+      }
+      if (tok.t === 'name') {
+        i += 1;
+        if (tok.v === 'pi') return Math.PI;
+        if (tok.v === 'e') return Math.E;
+        if (tok.v === 'ans') return env.ans;
+        if (tok.v === 'mem') return env.mem;
+        expect('(');
+        const arg = parseExpr();
+        expect(')');
+        return calcApply(tok.v, arg, env.deg);
+      }
+      throw new Error('Unexpected symbol');
+    }
+
+    const value = parseExpr();
+    if (i !== tokens.length) throw new Error('Unexpected symbol');
+    if (!isFinite(value)) throw new Error('Result too large');
+    return value;
+  }
+
+  function calcFormat(x) {
+    if (!isFinite(x)) return 'Error';
+    if (x === 0) return '0';
+    const a = Math.abs(x);
+    if (a >= 1e12 || a < 1e-9) return x.toExponential(6).replace('e+', 'e');
+    return String(Number(x.toPrecision(12)));
+  }
+
+  function calcCloseParens(s) {
+    const open = (s.match(/\(/g) || []).length;
+    const close = (s.match(/\)/g) || []).length;
+    return open > close ? s + ')'.repeat(open - close) : s;
+  }
+  /* CALC-CORE-END */
+
+  /* ---------- Scientific calculator: panel ---------- */
+  const calcFab = $('calcFab');
+  const calcPanel = $('calcPanel');
+  const calcExprEl = $('calcExpr');
+  const calcResEl = $('calcRes');
+  const calcMemEl = $('calcMem');
+
+  let expr = '';            // what has been typed so far
+  let lastAnswer = 0;       // Ans
+  let memory = 0;           // M
+  let angle = 'DEG';        // DEG or RAD
+  let justEvaluated = false;
+  let errorState = false;
+  const OP_START = /^[\^!%*\/+\-)]/;
+
+  const SCI_KEYS = [
+    [{ l: 'MC', a: 'mc' }, { l: 'MR', a: 'mr' }, { l: 'M+', a: 'm+' }, { l: 'M−', a: 'm-' }, { l: 'Ans', v: 'ans' }],
+    [{ l: 'sin', v: 'sin(' }, { l: 'cos', v: 'cos(' }, { l: 'tan', v: 'tan(' }, { l: 'sin⁻¹', v: 'asin(' }, { l: 'cos⁻¹', v: 'acos(' }],
+    [{ l: 'tan⁻¹', v: 'atan(' }, { l: 'ln', v: 'ln(' }, { l: 'log', v: 'log(' }, { l: 'π', v: 'pi' }, { l: 'e', v: 'e' }],
+    [{ l: 'x²', v: '^2' }, { l: 'xʸ', v: '^' }, { l: '√', v: 'sqrt(' }, { l: '∛', v: 'cbrt(' }, { l: 'n!', v: '!' }],
+    [{ l: '1/x', v: '^(-1)' }, { l: '|x|', v: 'abs(' }, { l: '%', v: '%' }, { l: 'EXP', v: '*10^' }, { l: 'DEG', a: 'mode', cls: 'alt' }]
+  ];
+  const STD_KEYS = [
+    [{ l: 'AC', a: 'clear', cls: 'alt' }, { l: '⌫', a: 'back', cls: 'alt' }, { l: '(', v: '(' }, { l: ')', v: ')' }],
+    [{ l: '7' }, { l: '8' }, { l: '9' }, { l: '÷', v: '/', cls: 'op' }],
+    [{ l: '4' }, { l: '5' }, { l: '6' }, { l: '×', v: '*', cls: 'op' }],
+    [{ l: '1' }, { l: '2' }, { l: '3' }, { l: '−', v: '-', cls: 'op' }],
+    [{ l: '0' }, { l: '.' }, { l: '±', a: 'sign', cls: 'alt' }, { l: '+', v: '+', cls: 'op' }],
+    [{ l: '=', a: 'equals', cls: 'op span4' }]
+  ];
+
+  function buildKeys(container, rows, small) {
+    rows.forEach((row) => row.forEach((k) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = ['ck', small ? 'sm' : '', k.cls || ''].join(' ').trim();
+      b.textContent = k.l;
+      b.dataset.a = k.a || '';
+      b.addEventListener('click', () => calcAction(k));
+      container.appendChild(b);
+    }));
+  }
+
+  function prettyExpr(s) {
+    return s
+      .replace(/asin\(/g, 'sin⁻¹(')
+      .replace(/acos\(/g, 'cos⁻¹(')
+      .replace(/atan\(/g, 'tan⁻¹(')
+      .replace(/sqrt\(/g, '√(')
+      .replace(/cbrt\(/g, '∛(')
+      .replace(/pi/g, 'π')
+      .replace(/ans/g, 'Ans')
+      .replace(/mem/g, 'M')
+      .replace(/\*10\^/g, '×10^')
+      .replace(/\*/g, '×')
+      .replace(/\//g, '÷')
+      .replace(/-/g, '−');
+  }
+
+  function evalNow(src) {
+    return calcEvaluate(src, { deg: angle === 'DEG', ans: lastAnswer, mem: memory });
+  }
+
+  function renderCalc() {
+    calcExprEl.textContent = prettyExpr(expr);
+    calcMemEl.textContent = memory !== 0 ? 'M' : '';
+    let text;
+    if (errorState) {
+      text = 'Error';
+    } else if (justEvaluated) {
+      text = calcFormat(lastAnswer);
+    } else if (!expr) {
+      text = '0';
+    } else {
+      try {
+        text = calcFormat(evalNow(calcCloseParens(expr)));
+      } catch (err) {
+        text = '';
+      }
+    }
+    calcResEl.textContent = text;
+    document.querySelectorAll('[data-a="mode"]').forEach((b) => { b.textContent = angle; });
+  }
+
+  function setError() {
+    errorState = true;
+    justEvaluated = false;
+    renderCalc();
+  }
+
+  function clearAll() {
+    expr = '';
+    justEvaluated = false;
+    errorState = false;
+    renderCalc();
+  }
+
+  function press(tok) {
+    if (errorState) {
+      expr = '';
+      errorState = false;
+    }
+    if (justEvaluated) {
+      expr = OP_START.test(tok) ? 'ans' : '';
+      justEvaluated = false;
+    }
+    expr += tok;
+    renderCalc();
+  }
+
+  function backspace() {
+    if (errorState || justEvaluated) {
+      clearAll();
+      return;
+    }
+    const tail = expr.match(/(asin\(|acos\(|atan\(|sqrt\(|cbrt\(|abs\(|sin\(|cos\(|tan\(|ln\(|log\(|\*10\^|\^\(-1\)|pi|ans|mem)$/);
+    expr = tail ? expr.slice(0, -tail[0].length) : expr.slice(0, -1);
+    renderCalc();
+  }
+
+  function toggleSign() {
+    if (errorState) return;
+    if (justEvaluated) {
+      expr = 'ans';
+      justEvaluated = false;
+    }
+    const flipped = expr.match(/\(-(\d*\.?\d+|ans|pi|mem|e)\)$/);
+    if (flipped) {
+      expr = expr.slice(0, flipped.index) + flipped[1];
+    } else {
+      const tail = expr.match(/(\d*\.?\d+|ans|pi|mem|e)$/);
+      if (tail) expr = expr.slice(0, tail.index) + '(-' + tail[1] + ')';
+    }
+    renderCalc();
+  }
+
+  function currentValue() {
+    if (!expr) return 0;
+    if (justEvaluated) return lastAnswer;
+    return evalNow(calcCloseParens(expr));
+  }
+
+  function addMemory(sign) {
+    if (errorState) return;
+    try {
+      memory += sign * currentValue();
+      renderCalc();
+    } catch (err) {
+      setError();
+    }
+  }
+
+  function evaluateNow() {
+    if (errorState || !expr) return;
+    const full = calcCloseParens(expr);
+    try {
+      lastAnswer = evalNow(full);
+      expr = full;
+      justEvaluated = true;
+      renderCalc();
+    } catch (err) {
+      setError();
+    }
+  }
+
+  function calcAction(k) {
+    switch (k.a) {
+      case 'clear': clearAll(); break;
+      case 'back': backspace(); break;
+      case 'equals': evaluateNow(); break;
+      case 'mc': memory = 0; renderCalc(); break;
+      case 'mr': press('mem'); break;
+      case 'm+': addMemory(1); break;
+      case 'm-': addMemory(-1); break;
+      case 'sign': toggleSign(); break;
+      case 'mode':
+        angle = angle === 'DEG' ? 'RAD' : 'DEG';
+        renderCalc();
+        break;
+      default: press(k.v !== undefined ? k.v : k.l);
+    }
+  }
+
+  function setCalc(open) {
+    calcPanel.hidden = !open;
+    calcFab.setAttribute('aria-expanded', String(open));
+    if (open) {
+      renderCalc();
+      calcPanel.focus({ preventScroll: true });
+    }
+  }
+
+  calcFab.addEventListener('click', () => setCalc(calcPanel.hidden));
+  $('calcClose').addEventListener('click', () => {
+    setCalc(false);
+    calcFab.focus();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (calcPanel.hidden) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    const k = e.key;
+    if (k === 'Escape') { e.preventDefault(); setCalc(false); calcFab.focus(); return; }
+    if (k === 'Enter' || k === '=') { e.preventDefault(); evaluateNow(); return; }
+    if (k === 'Backspace') { e.preventDefault(); backspace(); return; }
+    if (k === 'Delete') { e.preventDefault(); clearAll(); return; }
+    if (/^[0-9.]$/.test(k) || (k.length === 1 && '+-*/^()!%'.indexOf(k) !== -1)) {
+      e.preventDefault();
+      press(k);
+    }
   });
 
   /* ---------- Initial render ---------- */
   renderTime();
   renderTodos();
-  resetMarks();
+  loadMarks();
+  calcMarks();
   renderExam();
+  buildKeys($('calcSci'), SCI_KEYS, true);
+  buildKeys($('calcKeys'), STD_KEYS, false);
+  renderCalc();
 })();
 </script>
 </body>
@@ -2611,6 +3234,35 @@ const HUB_BANK = {
     });
   });
 
+  // ---------- Tips and tricks ----------
+  const TIPS = [
+    "Practise two examples right after learning a formula, without looking at the book.",
+    "Check your answer by putting a simple number into the original question and seeing if both sides match.",
+    "To square a number that ends in 5, multiply the tens digit by the next whole number, then write 25 after it. For example, 35² = 3 × 4 = 12, so 35² = 1225.",
+    "To multiply a two-digit number by 11, add its two digits and place the sum between them. For example, 32 × 11 = 352, because 3 + 2 = 5. This works when the digits add to less than 10.",
+    "To multiply by 5, multiply by 10 and then halve the result. For example, 36 × 5 = 360 ÷ 2 = 180.",
+    "A number is divisible by 3 if the sum of its digits is divisible by 3. The same check works for 9, with the digit sum divisible by 9.",
+    "A number is divisible by 4 if its last two digits form a number divisible by 4.",
+    "A perfect square never ends in 2, 3, 7 or 8. If your answer ends in one of these, check your working.",
+    "To find 10% of a number, move the decimal point one place to the left. For 15%, add half of that to 10%.",
+    "Convert percentages to fractions to calculate faster. Since 25% is 1/4, 25% of 200 is 50.",
+    "Before solving a word problem, write down what is given and what you need to find.",
+    "Keep an error notebook. Write each mistake and its correct method, then try the same question again a few days later.",
+    "Use the Pomodoro method: 25 minutes of focused study, then a 5-minute break.",
+    "Use active recall: close the book, write down everything you remember from the chapter, then check what you missed.",
+    "Draw a neat figure for every geometry question. A clear diagram often shows the method before you write a single step.",
+    "Write units with answers to word problems, such as cm, m² or rupees.",
+    "In an exam, skim the whole paper for two minutes first, then start with the questions you know best.",
+    "When you are stuck, try the same type of problem with smaller numbers. The pattern often becomes clear.",
+    "Make a one-page formula sheet for each chapter and read it for ten minutes before going to sleep.",
+    "Teach the topic to a friend or to an empty room. If you can explain it simply, you understand it.",
+    "When multiplying, two negatives make a positive, and a positive with a negative makes a negative.",
+    "Write negative numbers in brackets when squaring. (−3)² = 9, while −3² = −9.",
+    "For a quadratic equation, try factorising first. If it does not factorise easily, use the quadratic formula.",
+    "Learn the trigonometric values for 0°, 30°, 45°, 60° and 90° in a small table. Most standard questions use them.",
+    "Before using a formula, check its conditions. For example, the sum formula for a GP needs r ≠ 1.",
+    "Always write + C when finding an indefinite integral, because the constant can be any number."
+  ];
 
   // ---------- Motivation articles ----------
   const ARTICLES = [
